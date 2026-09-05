@@ -1,0 +1,6 @@
+{
+  "name": "QAS & SERVICOM Compliance Platform",
+  "description": "Integrated Quality Assurance, Student Feedback, Lecturer Evaluation, and SERVICOM Service-Delivery Grievance Redressal for Higher Education Institutions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
