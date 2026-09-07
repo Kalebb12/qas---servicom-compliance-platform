@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { AccessibilityControls } from './AccessibilityControls';
 import { 
   Menu, 
   Search, 
@@ -81,6 +82,8 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
 
         {/* Right Side: Compact Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          <AccessibilityControls />
+
           {/* Compact Expandable Search / Grievance Tracker Icon */}
           <div className="relative">
             {isSearchExpanded ? (

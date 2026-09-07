@@ -18,6 +18,39 @@
     font-weight: 400;
   }
 
+  :focus-visible {
+    outline: 3px solid #E7A33E;
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.5rem;
+  background: #FBF9F4;
+  color: #12332F;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgb(18 51 47 / 18%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
   h1, h2, h3, h4, h5, .font-piazzolla {
     font-family: 'Piazzolla', Georgia, Cambria, 'Times New Roman', Times, serif;
     font-weight: 600;

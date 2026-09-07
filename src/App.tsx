@@ -24,6 +24,10 @@ const MainContent: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#EFF3F1] flex font-sans text-[#1A2421]">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* Toast Notification */}
       {notificationMessage && (
         <div className="fixed bottom-16 md:bottom-6 right-4 sm:right-6 z-50 bg-[#12332F] text-[#FBF9F4] px-4 py-3 rounded-xl shadow-2xl border border-[#275B52] flex items-center gap-3 text-xs font-medium animate-in fade-in slide-in-from-bottom-4 duration-200 max-w-md">
@@ -41,7 +45,7 @@ const MainContent: React.FC = () => {
         <TopBar onOpenTrackModal={handleOpenTrackModal} />
 
         {/* Primary Role Views (Responsive padding for mobile bottom bar) */}
-        <main className="flex-1 pb-20 md:pb-12">
+        <main id="main-content" tabIndex={-1} className="flex-1 pb-20 md:pb-12 outline-none">
           {role === 'student' && <StudentPortal />}
           {role === 'lecturer' && <LecturerPortal />}
           {role === 'qa_officer' && <QAOfficerPortal />}
