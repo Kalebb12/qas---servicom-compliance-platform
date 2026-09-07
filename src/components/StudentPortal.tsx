@@ -1,88 +1,153 @@
-import React, { useState, useEffect } from 'react';
-import { useApp } from '../context/AppContext';
-import { CourseEvaluation, StudentEvaluationCriteria, ComplaintCategory, ComplaintPriority } from '../types';
-import { 
-  GraduationCap, 
-  BookOpen, 
-  Send, 
-  CheckCircle2, 
-  Clock, 
-  AlertCircle, 
-  ShieldAlert, 
-  Star, 
-  MessageSquare, 
-  FileText, 
-  ChevronRight, 
-  Lock, 
+import React, { useState, useEffect } from "react";
+import { useApp } from "../context/AppContext";
+import {
+  CourseEvaluation,
+  StudentEvaluationCriteria,
+  ComplaintCategory,
+  ComplaintPriority,
+} from "../types";
+import {
+  GraduationCap,
+  BookOpen,
+  Send,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  ShieldAlert,
+  Star,
+  MessageSquare,
+  FileText,
+  ChevronRight,
+  Lock,
   Search,
   Upload,
   Sparkles,
   Info,
   Check,
   Building,
-  UserX
-} from 'lucide-react';
+  UserX,
+  Mic,
+  Square,
+  RotateCcw,
+} from "lucide-react";
+
+type SpeechRecognitionEventLike = Event & {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+};
+
+type SpeechRecognitionErrorEventLike = Event & {
+  error: string;
+};
+
+type SpeechRecognitionLike = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  processLocally?: boolean;
+  onstart: (() => void) | null;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+
+type SpeechRecognitionWithLocalSupport = SpeechRecognitionConstructor & {
+  available?: (options: {
+    langs: string[];
+    processLocally?: boolean;
+  }) => Promise<"unavailable" | "downloadable" | "downloading" | "available">;
+  install?: (options: { langs: string[] }) => Promise<boolean>;
+};
+
+const getSpeechRecognition = () => {
+  const browserWindow = window as typeof window & {
+    SpeechRecognition?: SpeechRecognitionConstructor;
+    webkitSpeechRecognition?: SpeechRecognitionConstructor;
+  };
+
+  return (
+    browserWindow.SpeechRecognition || browserWindow.webkitSpeechRecognition
+  );
+};
 
 export const StudentPortal: React.FC = () => {
-  const { 
-    currentUser, 
-    courseEvaluations, 
-    submitCourseEvaluation, 
-    complaints, 
-    submitComplaint, 
+  const {
+    currentUser,
+    courseEvaluations,
+    submitCourseEvaluation,
+    complaints,
+    submitComplaint,
     rateComplaintResolution,
     activeNav,
-    setActiveNav
+    setActiveNav,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'evaluations' | 'lodge' | 'history'>('evaluations');
+  const [activeTab, setActiveTab] = useState<
+    "evaluations" | "lodge" | "history"
+  >("evaluations");
 
   // Synchronize internal tabs with global activeNav from sidebar/bottom bar
   useEffect(() => {
-    if (activeNav === 'lodge') {
-      setActiveTab('lodge');
-    } else if (activeNav === 'track') {
-      setActiveTab('history');
-    } else if (activeNav === 'evaluations' || activeNav === 'dashboard') {
-      setActiveTab('evaluations');
+    if (activeNav === "lodge") {
+      setActiveTab("lodge");
+    } else if (activeNav === "track") {
+      setActiveTab("history");
+    } else if (activeNav === "evaluations" || activeNav === "dashboard") {
+      setActiveTab("evaluations");
     }
   }, [activeNav]);
 
-  const handleTabSelect = (tab: 'evaluations' | 'lodge' | 'history') => {
+  const handleTabSelect = (tab: "evaluations" | "lodge" | "history") => {
     setActiveTab(tab);
-    if (tab === 'evaluations') setActiveNav('evaluations');
-    else if (tab === 'lodge') setActiveNav('lodge');
-    else if (tab === 'history') setActiveNav('track');
+    if (tab === "evaluations") setActiveNav("evaluations");
+    else if (tab === "lodge") setActiveNav("lodge");
+    else if (tab === "history") setActiveNav("track");
   };
-  
+
   // Evaluation Modal State
-  const [selectedCourseForEval, setSelectedCourseForEval] = useState<CourseEvaluation | null>(null);
+  const [selectedCourseForEval, setSelectedCourseForEval] =
+    useState<CourseEvaluation | null>(null);
   const [evalRatings, setEvalRatings] = useState<StudentEvaluationCriteria>({
     punctuality: 5,
     subjectMastery: 5,
     communicationClarity: 4,
     gradingTransparency: 4,
     consultationAvailability: 4,
-    syllabusCoverageAdherence: 5
+    syllabusCoverageAdherence: 5,
   });
-  const [evalComment, setEvalComment] = useState('');
+  const [evalComment, setEvalComment] = useState("");
   const [evalSubmittedSuccess, setEvalSubmittedSuccess] = useState(false);
 
   // Complaint Form State
-  const [complaintTitle, setComplaintTitle] = useState('');
-  const [complaintCategory, setComplaintCategory] = useState<ComplaintCategory>('facility_breakdown');
-  const [complaintPriority, setComplaintPriority] = useState<ComplaintPriority>('standard');
-  const [complaintLocation, setComplaintLocation] = useState('');
+  const [complaintTitle, setComplaintTitle] = useState("");
+  const [complaintCategory, setComplaintCategory] =
+    useState<ComplaintCategory>("facility_breakdown");
+  const [complaintPriority, setComplaintPriority] =
+    useState<ComplaintPriority>("standard");
+  const [complaintLocation, setComplaintLocation] = useState("");
   const [complaintFaculty, setComplaintFaculty] = useState(currentUser.faculty);
   const [complaintDept, setComplaintDept] = useState(currentUser.department);
-  const [complaintDescription, setComplaintDescription] = useState('');
+  const [complaintDescription, setComplaintDescription] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [attachmentName, setAttachmentName] = useState('');
-  const [generatedTrackingCode, setGeneratedTrackingCode] = useState<string | null>(null);
+  const [attachmentName, setAttachmentName] = useState("");
+  const [generatedTrackingCode, setGeneratedTrackingCode] = useState<
+    string | null
+  >(null);
+  const [isRecordingComplaint, setIsRecordingComplaint] = useState(false);
+  const [isTranscribingComplaint, setIsTranscribingComplaint] = useState(false);
+  const [audioRecordingError, setAudioRecordingError] = useState("");
+  const recognitionRef = React.useRef<SpeechRecognitionLike | null>(null);
+  const confirmedTranscriptRef = React.useRef("");
 
   // Filter complaints belonging to this student or with studentMatric matching
   const myComplaints = complaints.filter(
-    c => c.studentMatric === currentUser.identifier || (!c.isAnonymous && c.studentName === currentUser.name)
+    (c) =>
+      c.studentMatric === currentUser.identifier ||
+      (!c.isAnonymous && c.studentName === currentUser.name),
   );
 
   const handleOpenEval = (course: CourseEvaluation) => {
@@ -93,9 +158,9 @@ export const StudentPortal: React.FC = () => {
       communicationClarity: 4,
       gradingTransparency: 4,
       consultationAvailability: 4,
-      syllabusCoverageAdherence: 5
+      syllabusCoverageAdherence: 5,
     });
-    setEvalComment('');
+    setEvalComment("");
     setEvalSubmittedSuccess(false);
   };
 
@@ -110,9 +175,104 @@ export const StudentPortal: React.FC = () => {
     }, 1800);
   };
 
+  const stopComplaintRecording = () => {
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+    setIsRecordingComplaint(false);
+    setIsTranscribingComplaint(false);
+  };
+
+  const startComplaintRecording = async () => {
+    const SpeechRecognition = getSpeechRecognition() as
+      | SpeechRecognitionWithLocalSupport
+      | undefined;
+    if (!SpeechRecognition) {
+      setAudioRecordingError(
+        "Audio transcription is not supported in this browser. You can still type the complaint below.",
+      );
+      return;
+    }
+
+    try {
+      const language = "en-US";
+      let useLocalRecognition = false;
+
+      if (SpeechRecognition.available) {
+        let availability = await SpeechRecognition.available({
+          langs: [language],
+          processLocally: true,
+        });
+
+        if (availability === "downloadable" && SpeechRecognition.install) {
+          await SpeechRecognition.install({ langs: [language] });
+          availability = await SpeechRecognition.available({
+            langs: [language],
+            processLocally: true,
+          });
+        }
+
+        useLocalRecognition = availability === "available";
+      }
+
+      const recognition = new SpeechRecognition();
+
+      recognitionRef.current = recognition;
+      setAudioRecordingError("");
+
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = language;
+      if (useLocalRecognition) {
+        recognition.processLocally = true;
+      }
+      recognition.onstart = () => {
+        setIsRecordingComplaint(true);
+        setIsTranscribingComplaint(true);
+      };
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setComplaintDescription((previousText) =>
+          `${previousText} ${transcript}`.trim(),
+        );
+      };
+      recognition.onerror = (event) => {
+        if (event.error !== "no-speech" && event.error !== "aborted") {
+          setAudioRecordingError(
+            event.error === "not-allowed" ||
+              event.error === "service-not-allowed"
+              ? "Microphone access was blocked. Allow microphone access and try again."
+              : event.error === "audio-capture"
+                ? "No microphone input is available. Connect or enable a microphone, then try again."
+                : event.error === "network"
+                  ? "The browser speech service is unavailable. Try Chrome or Edge, or type the complaint manually."
+                  : `Speech recognition failed (${event.error}). You can type the complaint manually or try again.`,
+          );
+        }
+        stopComplaintRecording();
+      };
+      recognition.onend = () => {
+        recognitionRef.current = null;
+        setIsRecordingComplaint(false);
+        setIsTranscribingComplaint(false);
+      };
+      recognition.start();
+    } catch {
+      setAudioRecordingError(
+        "Microphone access was not granted. You can still type the complaint below.",
+      );
+      stopComplaintRecording();
+    }
+  };
+
   const handleLodgeComplaint = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!complaintTitle.trim() || !complaintDescription.trim() || !complaintLocation.trim()) return;
+    stopComplaintRecording();
+    if (
+      !complaintTitle.trim() ||
+      !complaintDescription.trim() ||
+      !complaintLocation.trim()
+    )
+      return;
 
     const code = submitComplaint({
       title: complaintTitle,
@@ -123,24 +283,54 @@ export const StudentPortal: React.FC = () => {
       department: complaintDept,
       description: complaintDescription,
       isAnonymous,
-      evidenceAttachmentName: attachmentName || undefined
+      evidenceAttachmentName: attachmentName || undefined,
     });
 
     setGeneratedTrackingCode(code);
     // Clear form
-    setComplaintTitle('');
-    setComplaintDescription('');
-    setComplaintLocation('');
-    setAttachmentName('');
+    setComplaintTitle("");
+    setComplaintDescription("");
+    setComplaintLocation("");
+    setAttachmentName("");
   };
 
-  const criteriaLabels: { key: keyof StudentEvaluationCriteria; label: string; desc: string }[] = [
-    { key: 'punctuality', label: 'Punctuality & Timetable Adherence', desc: 'Arrives promptly and utilizes allocated lecture duration effectively' },
-    { key: 'subjectMastery', label: 'Subject Mastery & Domain Depth', desc: 'Demonstrates deep conceptual understanding and answers questions authoritatively' },
-    { key: 'communicationClarity', label: 'Communication Clarity & Engagement', desc: 'Explains complex concepts clearly, engages students, welcomes inquiries' },
-    { key: 'gradingTransparency', label: 'Grading Transparency & Continuous Assessment', desc: 'Releases test/assignment criteria, returns scripts, provides constructive marks' },
-    { key: 'consultationAvailability', label: 'Availability for Consultation / Office Hours', desc: 'Accessible during scheduled office hours or electronic academic consultations' },
-    { key: 'syllabusCoverageAdherence', label: 'Syllabus Coverage & Learning Materials', desc: 'Follows official course outline systematically and provides relevant reading packs' }
+  useEffect(() => () => stopComplaintRecording(), []);
+
+  const criteriaLabels: {
+    key: keyof StudentEvaluationCriteria;
+    label: string;
+    desc: string;
+  }[] = [
+    {
+      key: "punctuality",
+      label: "Punctuality & Timetable Adherence",
+      desc: "Arrives promptly and utilizes allocated lecture duration effectively",
+    },
+    {
+      key: "subjectMastery",
+      label: "Subject Mastery & Domain Depth",
+      desc: "Demonstrates deep conceptual understanding and answers questions authoritatively",
+    },
+    {
+      key: "communicationClarity",
+      label: "Communication Clarity & Engagement",
+      desc: "Explains complex concepts clearly, engages students, welcomes inquiries",
+    },
+    {
+      key: "gradingTransparency",
+      label: "Grading Transparency & Continuous Assessment",
+      desc: "Releases test/assignment criteria, returns scripts, provides constructive marks",
+    },
+    {
+      key: "consultationAvailability",
+      label: "Availability for Consultation / Office Hours",
+      desc: "Accessible during scheduled office hours or electronic academic consultations",
+    },
+    {
+      key: "syllabusCoverageAdherence",
+      label: "Syllabus Coverage & Learning Materials",
+      desc: "Follows official course outline systematically and provides relevant reading packs",
+    },
   ];
 
   return (
@@ -163,23 +353,33 @@ export const StudentPortal: React.FC = () => {
               Welcome, {currentUser.name}
             </h2>
             <p className="text-xs text-[#EFF3F1]/80 mt-0.5 max-w-2xl font-normal hidden sm:block">
-              Your voice drives institutional excellence. Complete semester lecturer evaluations confidentially, report service breakdowns, and track grievance resolution in real time.
+              Your voice drives institutional excellence. Complete semester
+              lecturer evaluations confidentially, report service breakdowns,
+              and track grievance resolution in real time.
             </p>
           </div>
 
           <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="bg-[#1A433E] border border-[#275B52] rounded-xl px-3.5 py-2 sm:px-4 sm:py-2.5 text-center flex-1 sm:flex-initial">
               <div className="font-sans text-xl sm:text-2xl font-medium text-[#FBF9F4]">
-                {courseEvaluations.filter(c => c.evaluatedByCurrentStudent).length}/{courseEvaluations.length}
+                {
+                  courseEvaluations.filter((c) => c.evaluatedByCurrentStudent)
+                    .length
+                }
+                /{courseEvaluations.length}
               </div>
-              <div className="text-[10px] sm:text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">Evaluated</div>
+              <div className="text-[10px] sm:text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">
+                Evaluated
+              </div>
             </div>
 
             <div className="bg-[#1A433E] border border-[#275B52] rounded-xl px-3.5 py-2 sm:px-4 sm:py-2.5 text-center flex-1 sm:flex-initial">
               <div className="font-sans text-xl sm:text-2xl font-medium text-[#E7A33E]">
                 {myComplaints.length}
               </div>
-              <div className="text-[10px] sm:text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">Grievances</div>
+              <div className="text-[10px] sm:text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">
+                Grievances
+              </div>
             </div>
           </div>
         </div>
@@ -187,11 +387,11 @@ export const StudentPortal: React.FC = () => {
         {/* Navigation Tabs (Synchronized with global activeNav) */}
         <div className="flex border-b border-[#1A433E] mt-4 sm:mt-5 gap-1.5 sm:gap-2 text-xs sm:text-sm overflow-x-auto pb-0.5">
           <button
-            onClick={() => handleTabSelect('evaluations')}
+            onClick={() => handleTabSelect("evaluations")}
             className={`flex items-center gap-1.5 pb-2.5 px-2.5 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs ${
-              activeTab === 'evaluations'
-                ? 'border-[#E7A33E] text-[#E7A33E]'
-                : 'border-transparent text-[#EFF3F1]/70 hover:text-white'
+              activeTab === "evaluations"
+                ? "border-[#E7A33E] text-[#E7A33E]"
+                : "border-transparent text-[#EFF3F1]/70 hover:text-white"
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
@@ -199,11 +399,11 @@ export const StudentPortal: React.FC = () => {
           </button>
 
           <button
-            onClick={() => handleTabSelect('lodge')}
+            onClick={() => handleTabSelect("lodge")}
             className={`flex items-center gap-1.5 pb-2.5 px-2.5 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs ${
-              activeTab === 'lodge'
-                ? 'border-[#E7A33E] text-[#E7A33E]'
-                : 'border-transparent text-[#EFF3F1]/70 hover:text-white'
+              activeTab === "lodge"
+                ? "border-[#E7A33E] text-[#E7A33E]"
+                : "border-transparent text-[#EFF3F1]/70 hover:text-white"
             }`}
           >
             <ShieldAlert className="w-3.5 h-3.5" />
@@ -211,11 +411,11 @@ export const StudentPortal: React.FC = () => {
           </button>
 
           <button
-            onClick={() => handleTabSelect('history')}
+            onClick={() => handleTabSelect("history")}
             className={`flex items-center gap-1.5 pb-2.5 px-2.5 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs ${
-              activeTab === 'history'
-                ? 'border-[#E7A33E] text-[#E7A33E]'
-                : 'border-transparent text-[#EFF3F1]/70 hover:text-white'
+              activeTab === "history"
+                ? "border-[#E7A33E] text-[#E7A33E]"
+                : "border-transparent text-[#EFF3F1]/70 hover:text-white"
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
@@ -225,13 +425,16 @@ export const StudentPortal: React.FC = () => {
       </div>
 
       {/* Tab 1: Course & Lecturer Evaluations */}
-      {activeTab === 'evaluations' && (
+      {activeTab === "evaluations" && (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200">
             <div>
-              <h3 className="font-bold text-slate-900 text-base">Registered Courses for Quality Review</h3>
+              <h3 className="font-bold text-slate-900 text-base">
+                Registered Courses for Quality Review
+              </h3>
               <p className="text-xs text-slate-500">
-                Harmattan Semester 2024/2025 • Department of Computer Science (300 Level)
+                Harmattan Semester 2024/2025 • Department of Computer Science
+                (300 Level)
               </p>
             </div>
             <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 font-medium">
@@ -244,7 +447,7 @@ export const StudentPortal: React.FC = () => {
             {courseEvaluations.map((course) => {
               const isDone = course.evaluatedByCurrentStudent;
               return (
-                <div 
+                <div
                   key={course.id}
                   className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between"
                 >
@@ -277,19 +480,31 @@ export const StudentPortal: React.FC = () => {
                     <div className="mt-3 pt-3 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
                       <div className="flex items-center justify-between">
                         <span className="text-slate-500">Instructor:</span>
-                        <span className="font-medium text-slate-800">{course.lecturerName}</span>
+                        <span className="font-medium text-slate-800">
+                          {course.lecturerName}
+                        </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-500">Syllabus Milestone:</span>
+                        <span className="text-slate-500">
+                          Syllabus Milestone:
+                        </span>
                         <span className="font-medium text-slate-800">
-                          Week {course.syllabusProgressWeeks} of {course.totalSyllabusWeeks} ({Math.round((course.syllabusProgressWeeks / course.totalSyllabusWeeks) * 100)}%)
+                          Week {course.syllabusProgressWeeks} of{" "}
+                          {course.totalSyllabusWeeks} (
+                          {Math.round(
+                            (course.syllabusProgressWeeks /
+                              course.totalSyllabusWeeks) *
+                              100,
+                          )}
+                          %)
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-slate-500">Class Aggregate:</span>
                         <span className="font-semibold text-slate-900 flex items-center gap-1">
                           <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                          {course.overallScore} / 5.0 ({course.totalResponses} students)
+                          {course.overallScore} / 5.0 ({course.totalResponses}{" "}
+                          students)
                         </span>
                       </div>
                     </div>
@@ -302,12 +517,14 @@ export const StudentPortal: React.FC = () => {
                     <button
                       onClick={() => handleOpenEval(course)}
                       className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${
-                        isDone 
-                          ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' 
-                          : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xs'
+                        isDone
+                          ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          : "bg-blue-600 text-white hover:bg-blue-700 shadow-xs"
                       }`}
                     >
-                      <span>{isDone ? 'Update Evaluation' : 'Evaluate Lecturer'}</span>
+                      <span>
+                        {isDone ? "Update Evaluation" : "Evaluate Lecturer"}
+                      </span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -319,7 +536,7 @@ export const StudentPortal: React.FC = () => {
       )}
 
       {/* Tab 2: Lodge SERVICOM Grievance */}
-      {activeTab === 'lodge' && (
+      {activeTab === "lodge" && (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs max-w-3xl mx-auto">
           <div className="border-b border-slate-200 pb-4 mb-6">
             <div className="flex items-center justify-between flex-wrap gap-2">
@@ -328,7 +545,8 @@ export const StudentPortal: React.FC = () => {
                   Lodge SERVICOM Grievance / Service Breakdown
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Formal reporting under the Institutional Quality & Service Compact Charter
+                  Formal reporting under the Institutional Quality & Service
+                  Compact Charter
                 </p>
               </div>
               <div className="bg-amber-50 text-amber-800 text-xs px-2.5 py-1 rounded-lg border border-amber-200 font-medium flex items-center gap-1.5">
@@ -348,26 +566,30 @@ export const StudentPortal: React.FC = () => {
                   Grievance Logged Successfully
                 </h4>
                 <p className="text-xs text-emerald-700 mt-1">
-                  Your case docket has been registered with the SERVICOM Nodal Desk.
+                  Your case docket has been registered with the SERVICOM Nodal
+                  Desk.
                 </p>
               </div>
 
               <div className="inline-block bg-white border border-emerald-300 rounded-lg px-4 py-2">
-                <span className="text-xs text-slate-500 block">Permanent Tracking Reference</span>
+                <span className="text-xs text-slate-500 block">
+                  Permanent Tracking Reference
+                </span>
                 <span className="text-lg font-mono font-bold text-slate-900 tracking-wider">
                   {generatedTrackingCode}
                 </span>
               </div>
 
               <div className="text-xs text-slate-600 max-w-md mx-auto">
-                You can monitor officer assignments, investigation notes, and resolution status on your dashboard using this code.
+                You can monitor officer assignments, investigation notes, and
+                resolution status on your dashboard using this code.
               </div>
 
               <div className="pt-2 flex justify-center gap-3">
                 <button
                   onClick={() => {
                     setGeneratedTrackingCode(null);
-                    setActiveTab('history');
+                    setActiveTab("history");
                   }}
                   className="px-4 py-2 bg-emerald-700 text-white rounded-lg text-xs font-semibold hover:bg-emerald-800 transition-colors cursor-pointer"
                 >
@@ -390,21 +612,41 @@ export const StudentPortal: React.FC = () => {
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                   {[
-                    { id: 'lecture_delivery', label: 'Lecture Delivery & Absenteeism' },
-                    { id: 'missing_grades', label: 'Missing Grades & CA Marks' },
-                    { id: 'facility_breakdown', label: 'Facility, Hall & Seating' },
-                    { id: 'harassment_victimization', label: 'Victimization / Harassment' },
-                    { id: 'library_labs', label: 'Laboratory / Equipment Fault' },
-                    { id: 'administrative_delay', label: 'Registry / Transcript Delay' }
+                    {
+                      id: "lecture_delivery",
+                      label: "Lecture Delivery & Absenteeism",
+                    },
+                    {
+                      id: "missing_grades",
+                      label: "Missing Grades & CA Marks",
+                    },
+                    {
+                      id: "facility_breakdown",
+                      label: "Facility, Hall & Seating",
+                    },
+                    {
+                      id: "harassment_victimization",
+                      label: "Victimization / Harassment",
+                    },
+                    {
+                      id: "library_labs",
+                      label: "Laboratory / Equipment Fault",
+                    },
+                    {
+                      id: "administrative_delay",
+                      label: "Registry / Transcript Delay",
+                    },
                   ].map((cat) => (
                     <button
                       type="button"
                       key={cat.id}
-                      onClick={() => setComplaintCategory(cat.id as ComplaintCategory)}
+                      onClick={() =>
+                        setComplaintCategory(cat.id as ComplaintCategory)
+                      }
                       className={`p-2.5 rounded-lg border text-left font-medium transition-all cursor-pointer ${
                         complaintCategory === cat.id
-                          ? 'border-indigo-600 bg-indigo-50 text-indigo-900 ring-1 ring-indigo-500'
-                          : 'border-slate-200 hover:border-slate-300 text-slate-700 bg-white'
+                          ? "border-indigo-600 bg-indigo-50 text-indigo-900 ring-1 ring-indigo-500"
+                          : "border-slate-200 hover:border-slate-300 text-slate-700 bg-white"
                       }`}
                     >
                       {cat.label}
@@ -435,7 +677,9 @@ export const StudentPortal: React.FC = () => {
                   </label>
                   <select
                     value={complaintPriority}
-                    onChange={(e) => setComplaintPriority(e.target.value as ComplaintPriority)}
+                    onChange={(e) =>
+                      setComplaintPriority(e.target.value as ComplaintPriority)
+                    }
                     className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-indigo-500 bg-white"
                   >
                     <option value="standard">Standard (72h SLA)</option>
@@ -470,11 +714,21 @@ export const StudentPortal: React.FC = () => {
                     onChange={(e) => setComplaintFaculty(e.target.value)}
                     className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-indigo-500 bg-white"
                   >
-                    <option value="Physical & Computing Sciences">Physical & Computing Sciences</option>
-                    <option value="Engineering & Technology">Engineering & Technology</option>
-                    <option value="Management & Social Sciences">Management & Social Sciences</option>
-                    <option value="Basic Medical Sciences">Basic Medical Sciences</option>
-                    <option value="Environmental Sciences">Environmental Sciences</option>
+                    <option value="Physical & Computing Sciences">
+                      Physical & Computing Sciences
+                    </option>
+                    <option value="Engineering & Technology">
+                      Engineering & Technology
+                    </option>
+                    <option value="Management & Social Sciences">
+                      Management & Social Sciences
+                    </option>
+                    <option value="Basic Medical Sciences">
+                      Basic Medical Sciences
+                    </option>
+                    <option value="Environmental Sciences">
+                      Environmental Sciences
+                    </option>
                   </select>
                 </div>
 
@@ -494,17 +748,79 @@ export const StudentPortal: React.FC = () => {
 
               {/* Description */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Incident Details & Evidence Narrative *
-                </label>
+                <div className="flex items-center justify-between gap-3 mb-1">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Incident Details & Evidence Narrative *
+                  </label>
+                  <span className="text-[10px] font-medium text-slate-500 normal-case tracking-normal">
+                    Type or speak your complaint
+                  </span>
+                </div>
                 <textarea
                   required
                   rows={4}
-                  placeholder="Provide precise details: dates, courses involved, affected student count, impact on learning..."
+                  placeholder="Provide precise details, or use Record Complaint to explain the issue verbally..."
                   value={complaintDescription}
                   onChange={(e) => setComplaintDescription(e.target.value)}
                   className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-indigo-500 bg-white leading-relaxed"
                 />
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  {!isRecordingComplaint ? (
+                    <button
+                      type="button"
+                      onClick={startComplaintRecording}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 text-xs font-semibold transition-colors cursor-pointer"
+                    >
+                      <Mic className="w-3.5 h-3.5" />
+                      Record Complaint
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={stopComplaintRecording}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 text-xs font-semibold transition-colors cursor-pointer"
+                    >
+                      <Square className="w-3 h-3 fill-current" />
+                      Stop & Review
+                    </button>
+                  )}
+
+                  {complaintDescription && !isRecordingComplaint && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setComplaintDescription("");
+                        confirmedTranscriptRef.current = "";
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 text-xs font-medium transition-colors cursor-pointer"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      Clear Transcript
+                    </button>
+                  )}
+
+                  {isRecordingComplaint && (
+                    <span className="inline-flex items-center gap-1.5 text-xs text-red-600 font-medium">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                      {isTranscribingComplaint
+                        ? "Listening and transcribing..."
+                        : "Recording stopped"}
+                    </span>
+                  )}
+                </div>
+                {audioRecordingError && (
+                  <p className="mt-2 text-xs text-red-600" role="alert">
+                    {audioRecordingError}
+                  </p>
+                )}
+                {complaintDescription &&
+                  !isRecordingComplaint &&
+                  !audioRecordingError && (
+                    <p className="mt-2 text-[11px] text-slate-500">
+                      Review and edit the transcript above before submitting
+                      your grievance.
+                    </p>
+                  )}
               </div>
 
               {/* Supporting Document simulation */}
@@ -522,7 +838,9 @@ export const StudentPortal: React.FC = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => setAttachmentName('signed_attendance_copy.pdf')}
+                    onClick={() =>
+                      setAttachmentName("signed_attendance_copy.pdf")
+                    }
                     className="px-3 py-2 text-xs bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-slate-700 font-medium cursor-pointer"
                   >
                     Simulate Upload
@@ -539,11 +857,17 @@ export const StudentPortal: React.FC = () => {
                   onChange={(e) => setIsAnonymous(e.target.checked)}
                   className="mt-1 w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500 cursor-pointer"
                 />
-                <label htmlFor="anonymous-toggle" className="text-xs text-slate-700 cursor-pointer select-none">
+                <label
+                  htmlFor="anonymous-toggle"
+                  className="text-xs text-slate-700 cursor-pointer select-none"
+                >
                   <span className="font-bold block text-slate-900">
                     File as Confidential / Whistleblower Grievance
                   </span>
-                  Your name ({currentUser.name}) and matric ({currentUser.identifier}) will be stripped from the case dossier forwarded to department heads and lecturers. Only the SERVICOM Ombudsman desk maintains encrypted audit logs.
+                  Your name ({currentUser.name}) and matric (
+                  {currentUser.identifier}) will be stripped from the case
+                  dossier forwarded to department heads and lecturers. Only the
+                  SERVICOM Ombudsman desk maintains encrypted audit logs.
                 </label>
               </div>
 
@@ -567,17 +891,20 @@ export const StudentPortal: React.FC = () => {
       )}
 
       {/* Tab 3: Track My Grievances */}
-      {activeTab === 'history' && (
+      {activeTab === "history" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200">
             <div>
-              <h3 className="font-bold text-slate-900 text-base">My Registered Grievance Dockets</h3>
+              <h3 className="font-bold text-slate-900 text-base">
+                My Registered Grievance Dockets
+              </h3>
               <p className="text-xs text-slate-500">
-                Track investigation milestones, assigned officers, and SLA resolution deadlines
+                Track investigation milestones, assigned officers, and SLA
+                resolution deadlines
               </p>
             </div>
             <button
-              onClick={() => setActiveTab('lodge')}
+              onClick={() => setActiveTab("lodge")}
               className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
             >
               + Lodge New Issue
@@ -587,19 +914,23 @@ export const StudentPortal: React.FC = () => {
           {myComplaints.length === 0 ? (
             <div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-500">
               <CheckCircle2 className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-              <p className="text-sm font-semibold text-slate-700">No active complaints on file</p>
+              <p className="text-sm font-semibold text-slate-700">
+                No active complaints on file
+              </p>
               <p className="text-xs text-slate-400 mt-1">
-                You haven't filed any issues yet this semester, or submitted issues were filed anonymously.
+                You haven't filed any issues yet this semester, or submitted
+                issues were filed anonymously.
               </p>
             </div>
           ) : (
             <div className="space-y-4">
               {myComplaints.map((item) => {
                 const isOverdue = item.isSlaBreached;
-                const isResolved = item.status === 'resolved' || item.status === 'closed';
+                const isResolved =
+                  item.status === "resolved" || item.status === "closed";
 
                 return (
-                  <div 
+                  <div
                     key={item.id}
                     className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs space-y-4"
                   >
@@ -609,13 +940,15 @@ export const StudentPortal: React.FC = () => {
                           <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
                             {item.trackingCode}
                           </span>
-                          <span className={`text-[11px] font-bold uppercase px-2 py-0.5 rounded ${
-                            item.priority === 'urgent'
-                              ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                              : item.priority === 'high'
-                              ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                              : 'bg-blue-100 text-blue-800 border border-blue-200'
-                          }`}>
+                          <span
+                            className={`text-[11px] font-bold uppercase px-2 py-0.5 rounded ${
+                              item.priority === "urgent"
+                                ? "bg-rose-100 text-rose-800 border border-rose-200"
+                                : item.priority === "high"
+                                  ? "bg-amber-100 text-amber-800 border border-amber-200"
+                                  : "bg-blue-100 text-blue-800 border border-blue-200"
+                            }`}
+                          >
                             {item.priority} Priority
                           </span>
                           {item.isAnonymous && (
@@ -629,26 +962,29 @@ export const StudentPortal: React.FC = () => {
                           {item.title}
                         </h4>
                         <div className="text-xs text-slate-500 mt-0.5">
-                          Location: {item.location} • Filed on {item.submittedAt}
+                          Location: {item.location} • Filed on{" "}
+                          {item.submittedAt}
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <div className={`text-xs font-bold px-3 py-1 rounded-full inline-block ${
-                          isResolved
-                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                            : isOverdue
-                            ? 'bg-rose-100 text-rose-800 border border-rose-300'
-                            : 'bg-indigo-100 text-indigo-800 border border-indigo-200'
-                        }`}>
-                          Status: {item.status.replace('_', ' ').toUpperCase()}
+                        <div
+                          className={`text-xs font-bold px-3 py-1 rounded-full inline-block ${
+                            isResolved
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              : isOverdue
+                                ? "bg-rose-100 text-rose-800 border border-rose-300"
+                                : "bg-indigo-100 text-indigo-800 border border-indigo-200"
+                          }`}
+                        >
+                          Status: {item.status.replace("_", " ").toUpperCase()}
                         </div>
                         <div className="text-[11px] text-slate-500 mt-1">
-                          {isResolved 
-                            ? 'Case Resolution Complete' 
-                            : isOverdue 
-                            ? 'SLA Target Breached (Escalated to DVC)' 
-                            : `SLA Clock: ${item.slaHoursRemaining}h remaining`}
+                          {isResolved
+                            ? "Case Resolution Complete"
+                            : isOverdue
+                              ? "SLA Target Breached (Escalated to DVC)"
+                              : `SLA Clock: ${item.slaHoursRemaining}h remaining`}
                         </div>
                       </div>
                     </div>
@@ -659,24 +995,39 @@ export const StudentPortal: React.FC = () => {
 
                     {/* Progress Step Indicator */}
                     <div className="pt-2">
-                      <div className="text-xs font-semibold text-slate-700 mb-2">Docket Workflow Progress:</div>
+                      <div className="text-xs font-semibold text-slate-700 mb-2">
+                        Docket Workflow Progress:
+                      </div>
                       <div className="grid grid-cols-4 gap-2 text-center text-[11px]">
                         {[
-                          { label: 'Submitted', done: true },
-                          { label: 'SERVICOM Triage', done: item.status !== 'submitted' },
-                          { label: 'Investigation / Action', done: ['investigating', 'action_taken', 'resolved', 'closed'].includes(item.status) },
-                          { label: 'Resolution Offered', done: isResolved }
+                          { label: "Submitted", done: true },
+                          {
+                            label: "SERVICOM Triage",
+                            done: item.status !== "submitted",
+                          },
+                          {
+                            label: "Investigation / Action",
+                            done: [
+                              "investigating",
+                              "action_taken",
+                              "resolved",
+                              "closed",
+                            ].includes(item.status),
+                          },
+                          { label: "Resolution Offered", done: isResolved },
                         ].map((step, idx) => (
-                          <div 
+                          <div
                             key={idx}
                             className={`p-2 rounded-lg border ${
-                              step.done 
-                                ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-semibold' 
-                                : 'bg-slate-50 border-slate-200 text-slate-400'
+                              step.done
+                                ? "bg-emerald-50 border-emerald-300 text-emerald-900 font-semibold"
+                                : "bg-slate-50 border-slate-200 text-slate-400"
                             }`}
                           >
                             <div className="flex items-center justify-center gap-1">
-                              {step.done && <Check className="w-3 h-3 text-emerald-600" />}
+                              {step.done && (
+                                <Check className="w-3 h-3 text-emerald-600" />
+                              )}
                               <span>{step.label}</span>
                             </div>
                           </div>
@@ -704,16 +1055,19 @@ export const StudentPortal: React.FC = () => {
                             {[1, 2, 3, 4, 5].map((star) => (
                               <button
                                 key={star}
-                                onClick={() => rateComplaintResolution(item.id, star)}
+                                onClick={() =>
+                                  rateComplaintResolution(item.id, star)
+                                }
                                 className="p-1 hover:scale-110 transition-transform cursor-pointer"
                                 title={`${star} Stars`}
                               >
-                                <Star 
+                                <Star
                                   className={`w-4 h-4 ${
-                                    (item.studentSatisfactionRating || 0) >= star
-                                      ? 'fill-amber-400 text-amber-500'
-                                      : 'text-slate-300'
-                                  }`} 
+                                    (item.studentSatisfactionRating || 0) >=
+                                    star
+                                      ? "fill-amber-400 text-amber-500"
+                                      : "text-slate-300"
+                                  }`}
                                 />
                               </button>
                             ))}
@@ -747,7 +1101,8 @@ export const StudentPortal: React.FC = () => {
                   {selectedCourseForEval.courseTitle}
                 </h3>
                 <p className="text-xs text-blue-200">
-                  Lecturer: {selectedCourseForEval.lecturerName} ({selectedCourseForEval.lecturerTitle})
+                  Lecturer: {selectedCourseForEval.lecturerName} (
+                  {selectedCourseForEval.lecturerTitle})
                 </p>
               </div>
               <button
@@ -767,16 +1122,24 @@ export const StudentPortal: React.FC = () => {
                   Evaluation Submitted Confidentially
                 </h4>
                 <p className="text-xs text-slate-500 max-w-md mx-auto">
-                  Your feedback has been integrated into the Department Quality Assurance score and lecturer teaching improvement index.
+                  Your feedback has been integrated into the Department Quality
+                  Assurance score and lecturer teaching improvement index.
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmitEvaluation} className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+              <form
+                onSubmit={handleSubmitEvaluation}
+                className="p-6 space-y-6 max-h-[80vh] overflow-y-auto"
+              >
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-900 flex items-start gap-2">
                   <Lock className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold">Confidential Student Evaluation of Teaching (SET): </span>
-                    Scores are strictly aggregated with the entire class before being presented to the lecturer and Quality Assurance Committee.
+                    <span className="font-bold">
+                      Confidential Student Evaluation of Teaching (SET):{" "}
+                    </span>
+                    Scores are strictly aggregated with the entire class before
+                    being presented to the lecturer and Quality Assurance
+                    Committee.
                   </div>
                 </div>
 
@@ -785,7 +1148,10 @@ export const StudentPortal: React.FC = () => {
                   {criteriaLabels.map((crit) => {
                     const currentVal = evalRatings[crit.key];
                     return (
-                      <div key={crit.key} className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                      <div
+                        key={crit.key}
+                        className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2"
+                      >
                         <div className="flex items-center justify-between">
                           <label className="text-xs font-bold text-slate-800">
                             {crit.label}
@@ -794,21 +1160,33 @@ export const StudentPortal: React.FC = () => {
                             {currentVal} / 5
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-500">{crit.desc}</p>
-                        
+                        <p className="text-[11px] text-slate-500">
+                          {crit.desc}
+                        </p>
+
                         <div className="flex items-center gap-2 pt-1">
                           {[1, 2, 3, 4, 5].map((val) => (
                             <button
                               type="button"
                               key={val}
-                              onClick={() => setEvalRatings(prev => ({ ...prev, [crit.key]: val }))}
+                              onClick={() =>
+                                setEvalRatings((prev) => ({
+                                  ...prev,
+                                  [crit.key]: val,
+                                }))
+                              }
                               className={`flex-1 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
                                 currentVal === val
-                                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                                  : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                                  ? "bg-indigo-600 text-white border-indigo-600 shadow-xs"
+                                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
                               }`}
                             >
-                              {val} {val === 5 ? '★ Excellent' : val === 1 ? 'Poor' : ''}
+                              {val}{" "}
+                              {val === 5
+                                ? "★ Excellent"
+                                : val === 1
+                                  ? "Poor"
+                                  : ""}
                             </button>
                           ))}
                         </div>

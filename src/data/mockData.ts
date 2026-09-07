@@ -17,7 +17,7 @@ export const USER_PROFILES: Record<string, UserProfile> = {
     faculty: 'Physical & Computing Sciences',
     identifier: 'U2022/CSC/1042',
     email: 'c.okafor@apex.edu.ng',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    avatar: '/assets/image.png'
   },
   lecturer: {
     id: 'usr_lecturer_1',
@@ -28,7 +28,7 @@ export const USER_PROFILES: Record<string, UserProfile> = {
     faculty: 'Physical & Computing Sciences',
     identifier: 'STAFF/ACAD/0488',
     email: 'm.adeleke@apex.edu.ng',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'
+    avatar: '/assets/image 4.png'
   },
   qa_officer: {
     id: 'usr_qa_1',
@@ -39,7 +39,7 @@ export const USER_PROFILES: Record<string, UserProfile> = {
     faculty: 'Vice Chancellor\'s Office',
     identifier: 'STAFF/NTS/0129',
     email: 'b.ibrahim.qa@apex.edu.ng',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80'
+    avatar: '/assets/image 4.png'
   },
   servicom_officer: {
     id: 'usr_servicom_1',
@@ -50,7 +50,7 @@ export const USER_PROFILES: Record<string, UserProfile> = {
     faculty: 'Registry & Public Accountability',
     identifier: 'STAFF/SRV/0041',
     email: 'servicom.nodal@apex.edu.ng',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80'
+    avatar: '/assets/image 5.png'
   },
   leadership: {
     id: 'usr_leadership_1',
@@ -61,7 +61,7 @@ export const USER_PROFILES: Record<string, UserProfile> = {
     faculty: 'Office of the Vice-Chancellor',
     identifier: 'STAFF/EXEC/0004',
     email: 'dvc.academics@apex.edu.ng',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80'
+    avatar: '/assets/image 3.png'
   }
 };
 
