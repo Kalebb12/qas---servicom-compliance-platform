@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
       role: 'servicom_officer',
       label: 'SERVICOM Nodal Desk',
       name: 'Mrs. Grace Danladi',
-      title: 'Grievance Redress Officer',
+      title: 'Complaint Resolution Officer',
       icon: <LifeBuoy className="w-4 h-4" />,
       color: 'bg-[#E7A33E]/20 text-[#1A2421] border-[#E7A33E]/40'
     },
@@ -112,7 +112,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
     },
     {
       id: 'lodge',
-      label: 'Lodge SERVICOM Grievance',
+      label: 'Make a Complaint',
       icon: <ShieldAlert className="w-4 h-4 shrink-0" />
     },
     {
@@ -194,14 +194,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
         )}
       </div>
 
-      {/* 2. Quick Search & Grievance Tracker */}
+      {/* 2. Quick Search & Complaint Tracker */}
       <div className="px-3 pt-3 pb-1">
         <form onSubmit={handleQuickTrackSubmit} className="relative">
           <input
             type="text"
             value={quickTrackInput}
             onChange={(e) => setQuickTrackInput(e.target.value)}
-            placeholder="Track Grievance (SRV-#)..."
+            placeholder="Track Complaint (SRV-#)..."
             className="w-full text-xs pl-8 pr-3 py-2 bg-[#0E2A27] border border-[#1A433E] rounded-lg text-[#FBF9F4] placeholder-[#EFF3F1]/40 focus:outline-hidden focus:ring-1 focus:ring-[#E7A33E] focus:border-[#E7A33E] transition-all"
           />
           <Search className="w-3.5 h-3.5 text-[#E7A33E] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />

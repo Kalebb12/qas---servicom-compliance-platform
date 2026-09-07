@@ -26,7 +26,7 @@ const INITIAL_NOTIFICATIONS: AppNotification[] = [
   {
     id: 'notif-1',
     title: 'SLA Escalation Alert',
-    message: 'Grievance SRV-2025-0142 (LT-B Projector Breakdown) has exceeded the 72h SLA target.',
+    message: 'Complaint SRV-2025-0142 (LT-B Projector Breakdown) has exceeded the 72h SLA target.',
     timestamp: '15 mins ago',
     category: 'sla_alert',
     isRead: false,
@@ -47,8 +47,8 @@ const INITIAL_NOTIFICATIONS: AppNotification[] = [
   },
   {
     id: 'notif-3',
-    title: 'Grievance Resolution Updated',
-    message: 'Grievance SRV-2025-0139 regarding missing CA marks in CSC 301 has been resolved by Dr. Adeleke.',
+    title: 'Complaint Resolution Updated',
+    message: 'Complaint SRV-2025-0139 regarding missing CA marks in CSC 301 has been resolved by Dr. Adeleke.',
     timestamp: 'Yesterday',
     category: 'complaint',
     isRead: true,

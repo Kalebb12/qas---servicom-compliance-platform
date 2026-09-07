@@ -1,67 +1,77 @@
-import React, { useEffect, useState } from 'react';
-import { Square, Volume2 } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { Square, Volume2 } from "lucide-react";
 
 export const AccessibilityControls: React.FC = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
   const [voiceCount, setVoiceCount] = useState(0);
 
   useEffect(() => {
-    if (!('speechSynthesis' in window)) return;
+    if (!("speechSynthesis" in window)) return;
 
-    const updateVoices = () => setVoiceCount(window.speechSynthesis.getVoices().length);
+    const updateVoices = () =>
+      setVoiceCount(window.speechSynthesis.getVoices().length);
     updateVoices();
-    window.speechSynthesis.addEventListener('voiceschanged', updateVoices);
+    window.speechSynthesis.addEventListener("voiceschanged", updateVoices);
 
     return () => {
       window.speechSynthesis.cancel();
-      window.speechSynthesis.removeEventListener('voiceschanged', updateVoices);
+      window.speechSynthesis.removeEventListener("voiceschanged", updateVoices);
     };
   }, []);
 
   const stopReading = () => {
     window.speechSynthesis?.cancel();
     setIsSpeaking(false);
-    setStatus('Reading stopped.');
+    setStatus("Reading stopped.");
   };
 
   const readPage = () => {
-    if (!('speechSynthesis' in window)) {
-      setStatus('Text-to-speech is not supported in this browser.');
+    if (!("speechSynthesis" in window)) {
+      setStatus("Text-to-speech is not supported in this browser.");
       return;
     }
 
     if (voiceCount === 0) {
-      setStatus('No speech voice is available. Install or enable a system text-to-speech voice, then try again.');
+      setStatus(
+        "No speech voice is available. Install or enable a system text-to-speech voice, then try again.",
+      );
       return;
     }
 
     const selectedText = window.getSelection()?.toString().trim();
-    const pageText = document.querySelector('main')?.textContent?.replace(/\s+/g, ' ').trim();
+    const pageText = document
+      .querySelector("main")
+      ?.textContent?.replace(/\s+/g, " ")
+      .trim();
     const textToRead = selectedText || pageText;
 
     if (!textToRead) {
-      setStatus('There is no readable content available.');
+      setStatus("There is no readable content available.");
       return;
     }
 
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(textToRead.slice(0, 12000));
-    utterance.lang = 'en-US';
+    utterance.lang = "en-US";
     utterance.rate = 0.95;
     const voices = window.speechSynthesis.getVoices();
-    utterance.voice = voices.find((voice) => voice.lang.toLowerCase().startsWith('en')) || voices[0];
+    utterance.voice =
+      voices.find((voice) => voice.lang.toLowerCase().startsWith("en")) ||
+      voices[0];
     utterance.onstart = () => {
       setIsSpeaking(true);
-      setStatus(selectedText ? 'Reading selected text.' : 'Reading page content.');
+      setStatus(
+        selectedText ? "Reading selected text." : "Reading page content.",
+      );
     };
     utterance.onend = () => {
       setIsSpeaking(false);
-      setStatus('Finished reading.');
+      setStatus("Finished reading.");
     };
     utterance.onerror = () => {
       setIsSpeaking(false);
-      setStatus('Text-to-speech could not start.');
+      setStatus("Text-to-speech could not start.");
     };
 
     window.speechSynthesis.resume();
@@ -93,7 +103,9 @@ export const AccessibilityControls: React.FC = () => {
           <span className="hidden sm:inline">Read aloud</span>
         </button>
       )}
-      <span className="sr-only" role="status" aria-live="polite">{status}</span>
+      <span className="sr-only" role="status" aria-live="polite">
+        {status}
+      </span>
     </div>
   );
 };

@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
-import { AppProvider, useApp } from './context/AppContext';
-import { Sidebar } from './components/Sidebar';
-import { TopBar } from './components/TopBar';
-import { BottomTabBar } from './components/BottomTabBar';
-import { NotificationsModal } from './components/NotificationsModal';
-import { StudentPortal } from './components/StudentPortal';
-import { LecturerPortal } from './components/LecturerPortal';
-import { QAOfficerPortal } from './components/QAOfficerPortal';
-import { ServicomPortal } from './components/ServicomPortal';
-import { LeadershipDashboard } from './components/LeadershipDashboard';
-import { TrackComplaintModal } from './components/TrackComplaintModal';
-import { CheckCircle2 } from 'lucide-react';
+import React, { useState } from "react";
+import { AppProvider, useApp } from "./context/AppContext";
+import { Sidebar } from "./components/Sidebar";
+import { TopBar } from "./components/TopBar";
+import { BottomTabBar } from "./components/BottomTabBar";
+import { NotificationsModal } from "./components/NotificationsModal";
+import { StudentPortal } from "./components/StudentPortal";
+import { LecturerPortal } from "./components/LecturerPortal";
+import { QAOfficerPortal } from "./components/QAOfficerPortal";
+import { ServicomPortal } from "./components/ServicomPortal";
+import { LeadershipDashboard } from "./components/LeadershipDashboard";
+import { TrackComplaintModal } from "./components/TrackComplaintModal";
+import { CheckCircle2 } from "lucide-react";
 
 const MainContent: React.FC = () => {
   const { role, notificationMessage } = useApp();
   const [isTrackModalOpen, setIsTrackModalOpen] = useState(false);
-  const [trackInitialCode, setTrackInitialCode] = useState<string | undefined>(undefined);
+  const [trackInitialCode, setTrackInitialCode] = useState<string | undefined>(
+    undefined,
+  );
 
   const handleOpenTrackModal = (code?: string) => {
     setTrackInitialCode(code);
@@ -45,12 +47,16 @@ const MainContent: React.FC = () => {
         <TopBar onOpenTrackModal={handleOpenTrackModal} />
 
         {/* Primary Role Views (Responsive padding for mobile bottom bar) */}
-        <main id="main-content" tabIndex={-1} className="flex-1 pb-20 md:pb-12 outline-none">
-          {role === 'student' && <StudentPortal />}
-          {role === 'lecturer' && <LecturerPortal />}
-          {role === 'qa_officer' && <QAOfficerPortal />}
-          {role === 'servicom_officer' && <ServicomPortal />}
-          {role === 'leadership' && <LeadershipDashboard />}
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="flex-1 pb-20 md:pb-12 outline-none"
+        >
+          {role === "student" && <StudentPortal />}
+          {role === "lecturer" && <LecturerPortal />}
+          {role === "qa_officer" && <QAOfficerPortal />}
+          {role === "servicom_officer" && <ServicomPortal />}
+          {role === "leadership" && <LeadershipDashboard />}
         </main>
 
         {/* Institutional Footer */}
@@ -58,15 +64,29 @@ const MainContent: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <svg viewBox="0 0 36 36" className="w-5 h-5 shrink-0" fill="none">
-                <circle cx="18" cy="18" r="14.5" stroke="#E7A33E" strokeWidth="2.75" fill="none" />
-                <path d="M11 18.5L16 23.5L25.5 13" stroke="#E7A33E" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round" />
+                <circle
+                  cx="18"
+                  cy="18"
+                  r="14.5"
+                  stroke="#E7A33E"
+                  strokeWidth="2.75"
+                  fill="none"
+                />
+                <path
+                  d="M11 18.5L16 23.5L25.5 13"
+                  stroke="#E7A33E"
+                  strokeWidth="2.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               <div>
                 <span className="font-serif text-sm font-semibold text-[#FBF9F4]">
                   QAS • Institutional Quality Assurance & SERVICOM Directorate
                 </span>
                 <p className="text-[11px] text-[#EFF3F1]/60">
-                  Academic Quality Standards, Student Feedback & Public Service Delivery Compliance
+                  Academic Quality Standards, Student Feedback & Public Service
+                  Delivery Compliance
                 </p>
               </div>
             </div>
@@ -74,7 +94,9 @@ const MainContent: React.FC = () => {
             <div className="flex items-center gap-2 text-[11px] text-[#EFF3F1]/70">
               <span>Harmattan 2024/2025</span>
               <span>•</span>
-              <span className="text-[#2F6E5F] font-medium">Senate Quality Framework</span>
+              <span className="text-[#2F6E5F] font-medium">
+                Senate Quality Framework
+              </span>
             </div>
           </div>
         </footer>
@@ -87,12 +109,12 @@ const MainContent: React.FC = () => {
       <NotificationsModal />
 
       {/* Global Track Complaint Modal */}
-      <TrackComplaintModal 
-        isOpen={isTrackModalOpen} 
+      <TrackComplaintModal
+        isOpen={isTrackModalOpen}
         onClose={() => {
           setIsTrackModalOpen(false);
           setTrackInitialCode(undefined);
-        }} 
+        }}
         initialCode={trackInitialCode}
       />
     </div>

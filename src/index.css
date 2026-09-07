@@ -2,29 +2,41 @@
 
 @layer base {
   :root {
-    --qas-primary-ink: #12332F;
-    --qas-accent-amber: #E7A33E;
-    --qas-paper: #EFF3F1;
-    --qas-confirm-teal: #2F6E5F;
-    --qas-text-ink: #1A2421;
-    --qas-text-dark: #FBF9F4;
-    --qas-critical-red: #DC2626;
+    --qas-primary-ink: #12332f;
+    --qas-accent-amber: #e7a33e;
+    --qas-paper: #eff3f1;
+    --qas-confirm-teal: #2f6e5f;
+    --qas-text-ink: #1a2421;
+    --qas-text-dark: #fbf9f4;
+    --qas-critical-red: #dc2626;
   }
 
   body {
-    font-family: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    color: #1A2421;
-    background-color: #EFF3F1;
+    font-family:
+      "IBM Plex Sans",
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      sans-serif;
+    color: #1a2421;
+    background-color: #eff3f1;
     font-weight: 400;
   }
 
   :focus-visible {
-    outline: 3px solid #E7A33E;
+    outline: 3px solid #e7a33e;
     outline-offset: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       scroll-behavior: auto !important;
@@ -32,36 +44,45 @@
     }
   }
 
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+    transform: translateY(-200%);
+    padding: 0.65rem 0.9rem;
+    border-radius: 0.5rem;
+    background: #fbf9f4;
+    color: #12332f;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgb(18 51 47 / 18%);
+  }
 
-.skip-link {
-  position: fixed;
-  top: 0.75rem;
-  left: 0.75rem;
-  z-index: 100;
-  transform: translateY(-200%);
-  padding: 0.65rem 0.9rem;
-  border-radius: 0.5rem;
-  background: #FBF9F4;
-  color: #12332F;
-  font-size: 0.8rem;
-  font-weight: 600;
-  box-shadow: 0 4px 14px rgb(18 51 47 / 18%);
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
-  h1, h2, h3, h4, h5, .font-piazzolla {
-    font-family: 'Piazzolla', Georgia, Cambria, 'Times New Roman', Times, serif;
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  .font-piazzolla {
+    font-family: "Piazzolla", Georgia, Cambria, "Times New Roman", Times, serif;
     font-weight: 600;
   }
 }
 
 .font-serif {
-  font-family: 'Piazzolla', Georgia, Cambria, 'Times New Roman', Times, serif;
+  font-family: "Piazzolla", Georgia, Cambria, "Times New Roman", Times, serif;
   font-weight: 600;
 }
 
 .font-sans {
-  font-family: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    "IBM Plex Sans",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }

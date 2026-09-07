@@ -559,7 +559,7 @@ export const SERVICOM_CHARTER_METRICS: ServicomCharterMetric[] = [
   },
   {
     id: 'scm_3',
-    serviceTitle: 'Student Grievance & Complaint Redressal',
+    serviceTitle: 'Student Complaint Resolution',
     responsibleUnit: 'Institutional SERVICOM Directorate',
     charterSlaDays: 3,
     averageActualDays: 2.8,

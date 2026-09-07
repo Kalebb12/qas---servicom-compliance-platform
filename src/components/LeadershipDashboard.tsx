@@ -65,7 +65,7 @@ export const LeadershipDashboard: React.FC = () => {
     rawRating: f.averageTeachingRating
   }));
 
-  // Chart Data: Grievance Categories Distribution
+  // Chart Data: Complaint Categories Distribution
   const categoryCounts: Record<string, number> = {};
   complaints.forEach(c => {
     const formatted = c.category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -204,10 +204,10 @@ export const LeadershipDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Card 3: SERVICOM Grievance Resolution */}
+        {/* Card 3: SERVICOM Complaint Resolution */}
         <div className="bg-white p-5 rounded-2xl border border-[#CBDAD6] shadow-xs space-y-2">
           <div className="flex items-center justify-between text-xs text-[#1A2421]/70">
-            <span className="font-medium">SERVICOM Grievance Resolution</span>
+            <span className="font-medium">SERVICOM Complaint Resolution</span>
             <span className="w-2 h-2 rounded-full bg-[#E7A33E]" />
           </div>
           <div className="flex items-baseline gap-1">
@@ -449,7 +449,7 @@ export const LeadershipDashboard: React.FC = () => {
                 <th className="py-3 px-3">Academic Staff</th>
                 <th className="py-3 px-3">Student Rating</th>
                 <th className="py-3 px-3">QA Pass Rate</th>
-                <th className="py-3 px-3">Open Grievances</th>
+                <th className="py-3 px-3">Open Complaints</th>
                 <th className="py-3 px-3">Resolution Timeline</th>
                 <th className="py-3 px-3">Status & Action Pathway</th>
               </tr>
@@ -501,12 +501,12 @@ export const LeadershipDashboard: React.FC = () => {
 
       {/* Category Breakdown and Charter SLAs */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Grievance Categories Breakdown */}
+        {/* Complaint Categories Breakdown */}
         <div className="bg-white p-6 rounded-2xl border border-[#CBDAD6] shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-serif text-base font-semibold text-[#12332F]">
-                SERVICOM Grievance Categories Breakdown
+                SERVICOM Complaint Categories Breakdown
               </h3>
               <p className="text-xs text-[#1A2421]/70">
                 Distribution of student complaints by institutional operational domain
@@ -628,7 +628,7 @@ export const LeadershipDashboard: React.FC = () => {
                   Apex University Quality Assurance Directorate & SERVICOM Committee
                 </div>
                 <div className="text-xs text-[#1A2421]/70">
-                  Comprehensive Mid-Semester Compliance, Lecturer Evaluation & Grievance Report
+                  Comprehensive Mid-Semester Compliance, Lecturer Evaluation & Complaint Report
                 </div>
                 <div className="text-[11px] font-mono text-[#1A2421]/60">
                   Generated on: {new Date().toLocaleDateString('en-GB')} • Reference: SEC/QAD/2025/RPT-04
@@ -644,7 +644,7 @@ export const LeadershipDashboard: React.FC = () => {
                   During the ongoing {sessionInfo.session} ({sessionInfo.semester}), the university recorded a total of <strong>{qaAudits.length} digital quality audits</strong> with an institutional compliance rate of <strong>{auditComplianceRate}%</strong>. The overall student teaching evaluation index stands at <strong>4.23 out of 5.00</strong> across 5 faculties.
                 </p>
                 <p>
-                  The SERVICOM Nodal Desk processed <strong>{totalComplaints} formal grievance dockets</strong>. Redress resolution rate is currently at <strong>{resolutionRate}%</strong>, with {breachedComplaints.length} cases actively engaged through designated follow-up pathways.
+                  The SERVICOM Nodal Desk processed <strong>{totalComplaints} formal complaint cases</strong>. Resolution rate is currently at <strong>{resolutionRate}%</strong>, with {breachedComplaints.length} cases actively engaged through designated follow-up pathways.
                 </p>
               </div>
 

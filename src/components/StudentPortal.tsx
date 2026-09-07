@@ -230,9 +230,20 @@ export const StudentPortal: React.FC = () => {
         setIsTranscribingComplaint(true);
       };
       recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
+        let transcript = "";
+        for (
+          let index = event.resultIndex;
+          index < event.results.length;
+          index += 1
+        ) {
+          transcript += `${event.results[index][0].transcript} `;
+        }
+
+        const cleanedTranscript = transcript.trim();
+        if (!cleanedTranscript) return;
+
         setComplaintDescription((previousText) =>
-          `${previousText} ${transcript}`.trim(),
+          `${previousText} ${cleanedTranscript}`.trim(),
         );
       };
       recognition.onerror = (event) => {
@@ -355,7 +366,7 @@ export const StudentPortal: React.FC = () => {
             <p className="text-xs text-[#EFF3F1]/80 mt-0.5 max-w-2xl font-normal hidden sm:block">
               Your voice drives institutional excellence. Complete semester
               lecturer evaluations confidentially, report service breakdowns,
-              and track grievance resolution in real time.
+              and track complaint resolution in real time.
             </p>
           </div>
 
@@ -378,7 +389,7 @@ export const StudentPortal: React.FC = () => {
                 {myComplaints.length}
               </div>
               <div className="text-[10px] sm:text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">
-                Grievances
+                Complaints
               </div>
             </div>
           </div>
@@ -407,7 +418,7 @@ export const StudentPortal: React.FC = () => {
             }`}
           >
             <ShieldAlert className="w-3.5 h-3.5" />
-            <span>Lodge Grievance</span>
+            <span>Make a Complaint</span>
           </button>
 
           <button
@@ -535,14 +546,14 @@ export const StudentPortal: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 2: Lodge SERVICOM Grievance */}
+      {/* Tab 2: Make a Complaint */}
       {activeTab === "lodge" && (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs max-w-3xl mx-auto">
           <div className="border-b border-slate-200 pb-4 mb-6">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">
-                  Lodge SERVICOM Grievance / Service Breakdown
+                  Make a Complaint / Report a Service Breakdown
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Formal reporting under the Institutional Quality & Service
@@ -563,7 +574,7 @@ export const StudentPortal: React.FC = () => {
               </div>
               <div>
                 <h4 className="font-bold text-emerald-900 text-lg">
-                  Grievance Logged Successfully
+                  Complaint Submitted Successfully
                 </h4>
                 <p className="text-xs text-emerald-700 mt-1">
                   Your case docket has been registered with the SERVICOM Nodal
@@ -608,7 +619,7 @@ export const StudentPortal: React.FC = () => {
               {/* Category Selector */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  1. Grievance Category *
+                  1. Complaint Category *
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                   {[
@@ -818,7 +829,7 @@ export const StudentPortal: React.FC = () => {
                   !audioRecordingError && (
                     <p className="mt-2 text-[11px] text-slate-500">
                       Review and edit the transcript above before submitting
-                      your grievance.
+                      your complaint.
                     </p>
                   )}
               </div>
@@ -862,7 +873,7 @@ export const StudentPortal: React.FC = () => {
                   className="text-xs text-slate-700 cursor-pointer select-none"
                 >
                   <span className="font-bold block text-slate-900">
-                    File as Confidential / Whistleblower Grievance
+                    File as Confidential / Whistleblower Complaint
                   </span>
                   Your name ({currentUser.name}) and matric (
                   {currentUser.identifier}) will be stripped from the case
@@ -890,13 +901,13 @@ export const StudentPortal: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 3: Track My Grievances */}
+      {/* Tab 3: Track My Complaints */}
       {activeTab === "history" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200">
             <div>
               <h3 className="font-bold text-slate-900 text-base">
-                My Registered Grievance Dockets
+                My Registered Complaint Dockets
               </h3>
               <p className="text-xs text-slate-500">
                 Track investigation milestones, assigned officers, and SLA

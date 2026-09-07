@@ -65,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
       role: 'servicom_officer',
       label: 'SERVICOM Nodal Desk',
       name: 'Mrs. Grace Danladi',
-      title: 'Grievance Redress Officer',
+      title: 'Complaint Resolution Officer',
       icon: <LifeBuoy className="w-4 h-4" />,
       color: 'bg-[#E7A33E]/20 text-[#1A2421] border-[#E7A33E]/40'
     },
@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
               </span>
             </div>
             <p className="text-[11px] text-[#EFF3F1]/60 font-sans mt-0.5">
-              Integrated Feedback, Teaching Evaluation & Grievance Redress
+              Integrated Feedback, Teaching Evaluation & Complaint Resolution
             </p>
           </div>
         </div>
@@ -152,7 +152,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
             className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium text-[#FBF9F4] bg-[#1A433E] hover:bg-[#20504A] border border-[#275B52] rounded-lg transition-colors cursor-pointer"
           >
             <Search className="w-3.5 h-3.5 text-[#E7A33E]" />
-            <span>Track Grievance / SLA</span>
+            <span>Track Complaint / SLA</span>
             <kbd className="hidden sm:inline bg-[#12332F] px-1.5 py-0.5 rounded text-[10px] text-[#E7A33E] border border-[#275B52] font-mono">
               SRV-#
             </kbd>

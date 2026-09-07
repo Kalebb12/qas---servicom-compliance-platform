@@ -53,7 +53,7 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
         <div className="bg-slate-900 p-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Search className="w-4 h-4 text-amber-400" />
-            <h3 className="font-bold text-sm">Track Grievance / SERVICOM SLA Status</h3>
+            <h3 className="font-bold text-sm">Track Complaint / SERVICOM SLA Status</h3>
           </div>
           <button
             onClick={onClose}

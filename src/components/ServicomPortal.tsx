@@ -119,7 +119,7 @@ export const ServicomPortal: React.FC = () => {
               <span>Institutional SERVICOM Nodal Directorate</span>
             </div>
             <h2 className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#FBF9F4]">
-              Grievance Redress & Service Compact Control Tower
+              Complaint Resolution & Service Compact Control Tower
             </h2>
             <p className="text-xs sm:text-sm text-[#EFF3F1]/80 mt-0.5">
               Officer: {currentUser.name} • Service Compact Compliance, Student Rights, Timely Resolution
@@ -155,7 +155,7 @@ export const ServicomPortal: React.FC = () => {
             }`}
           >
             <Flame className="w-4 h-4" />
-            <span>Grievance Dockets & Triage ({complaints.length})</span>
+            <span>Complaints & Triage ({complaints.length})</span>
           </button>
 
           <button
