@@ -1,82 +1,90 @@
-import React, { useState } from 'react';
-import { useApp } from '../context/AppContext';
-import { UserRole } from '../types';
-import { 
-  ShieldCheck, 
-  GraduationCap, 
-  BookOpen, 
-  ClipboardCheck, 
-  LifeBuoy, 
-  Landmark, 
-  Search, 
-  RotateCcw, 
+import React, { useState } from "react";
+import { useApp } from "../context/AppContext";
+import { UserRole } from "../types";
+import {
+  ShieldCheck,
+  GraduationCap,
+  BookOpen,
+  ClipboardCheck,
+  LifeBuoy,
+  Landmark,
+  Search,
+  RotateCcw,
   AlertTriangle,
   Clock,
-  UserCheck
-} from 'lucide-react';
+  UserCheck,
+} from "lucide-react";
 
 interface HeaderProps {
   onOpenTrackModal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
-  const { 
-    role, 
-    setRole, 
-    currentUser, 
-    sessionInfo, 
-    complaints, 
-    resetAllData 
-  } = useApp();
+  const { role, setRole, currentUser, sessionInfo, complaints, resetAllData } =
+    useApp();
 
-  const [searchCode, setSearchCode] = useState('');
+  const [searchCode, setSearchCode] = useState("");
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
 
   // Count active urgent / breached complaints
-  const breachedCount = complaints.filter(c => c.isSlaBreached && c.status !== 'resolved' && c.status !== 'closed').length;
-  const urgentCount = complaints.filter(c => c.priority === 'urgent' && c.status !== 'resolved' && c.status !== 'closed').length;
+  const breachedCount = complaints.filter(
+    (c) => c.isSlaBreached && c.status !== "resolved" && c.status !== "closed",
+  ).length;
+  const urgentCount = complaints.filter(
+    (c) =>
+      c.priority === "urgent" &&
+      c.status !== "resolved" &&
+      c.status !== "closed",
+  ).length;
 
-  const roleOptions: { role: UserRole; label: string; name: string; title: string; icon: React.ReactNode; color: string }[] = [
+  const roleOptions: {
+    role: UserRole;
+    label: string;
+    name: string;
+    title: string;
+    icon: React.ReactNode;
+    color: string;
+  }[] = [
     {
-      role: 'student',
-      label: 'Student Portal',
-      name: 'Chinedu Okafor',
-      title: 'Undergraduate (CSC 300L)',
+      role: "student",
+      label: "Student Portal",
+      name: "Chinedu Okafor",
+      title: "Undergraduate (CSC 300L)",
       icon: <GraduationCap className="w-4 h-4" />,
-      color: 'bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30'
+      color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
     },
     {
-      role: 'lecturer',
-      label: 'Lecturer Portal',
-      name: 'Dr. Miriam Adeleke',
-      title: 'Senior Lecturer, Ph.D',
+      role: "lecturer",
+      label: "Lecturer Portal",
+      name: "Dr. Miriam Adeleke",
+      title: "Senior Lecturer, Ph.D",
       icon: <BookOpen className="w-4 h-4" />,
-      color: 'bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30'
+      color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
     },
     {
-      role: 'qa_officer',
-      label: 'QA Inspector',
-      name: 'Engr. Bello Ibrahim',
-      title: 'Chief Academic Quality Auditor',
+      role: "qa_officer",
+      label: "QA Inspector",
+      name: "Engr. Bello Ibrahim",
+      title: "Chief Academic Quality Auditor",
       icon: <ClipboardCheck className="w-4 h-4" />,
-      color: 'bg-[#12332F]/10 text-[#12332F] border-[#12332F]/20'
+      color: "bg-[#12332F]/10 text-[#12332F] border-[#12332F]/20",
     },
     {
-      role: 'servicom_officer',
-      label: 'SERVICOM Nodal Desk',
-      name: 'Mrs. Grace Danladi',
-      title: 'Complaint Resolution Officer',
+      role: "servicom_officer",
+      label: "SERVICOM Nodal Desk",
+      name: "Mrs. Grace Danladi",
+      title: "Complaint Resolution Officer",
       icon: <LifeBuoy className="w-4 h-4" />,
-      color: 'bg-[#E7A33E]/20 text-[#1A2421] border-[#E7A33E]/40'
+      color: "bg-[#E7A33E]/20 text-[#1A2421] border-[#E7A33E]/40",
     },
     {
-      role: 'leadership',
-      label: 'University Leadership',
-      name: 'Prof. Olumide Balogun',
-      title: 'DVC (Academic & QA Oversight)',
+      role: "leadership",
+      label: "University Leadership",
+      name: "Prof. Olumide Balogun",
+      title: "DVC (Academic & QA Oversight)",
       icon: <Landmark className="w-4 h-4" />,
-      color: 'bg-[#12332F] text-[#FBF9F4] border-[#12332F]'
-    }
+      color: "bg-[#12332F] text-[#FBF9F4] border-[#12332F]",
+    },
   ];
 
   return (
@@ -90,9 +98,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
               Apex University Quality Assurance System
             </span>
             <span className="text-[#1A433E] hidden sm:inline">•</span>
-            <span className="text-[#EFF3F1]/70 hidden sm:inline">{sessionInfo.session}</span>
+            <span className="text-[#EFF3F1]/70 hidden sm:inline">
+              {sessionInfo.session}
+            </span>
             <span className="text-[#1A433E] hidden md:inline">|</span>
-            <span className="text-[#E7A33E] font-medium hidden md:inline">{sessionInfo.semester} (Week {sessionInfo.week})</span>
+            <span className="text-[#E7A33E] font-medium hidden md:inline">
+              {sessionInfo.semester} (Week {sessionInfo.week})
+            </span>
           </div>
 
           <div className="flex items-center gap-3 text-[#EFF3F1]/80">
@@ -102,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
                 <span>{breachedCount} Follow-up Escalation Active</span>
               </span>
             )}
-            <button 
+            <button
               onClick={resetAllData}
               title="Reset sample institutional data"
               className="inline-flex items-center gap-1 hover:text-[#E7A33E] transition-colors cursor-pointer text-[#EFF3F1]/70"
@@ -119,14 +131,27 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
         {/* Brand & Identity: QAS in Piazzolla 600 with circular checkmark in amber */}
         <div className="flex items-center gap-3.5">
           <div className="flex items-center justify-center shrink-0">
-            <svg 
-              viewBox="0 0 36 36" 
-              className="w-9 h-9 shrink-0" 
+            <svg
+              viewBox="0 0 36 36"
+              className="w-9 h-9 shrink-0"
               fill="none"
               aria-label="QAS Logo mark"
             >
-              <circle cx="18" cy="18" r="14.5" stroke="#E7A33E" strokeWidth="2.75" fill="none" />
-              <path d="M11 18.5L16 23.5L25.5 13" stroke="#E7A33E" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round" />
+              <circle
+                cx="18"
+                cy="18"
+                r="14.5"
+                stroke="#E7A33E"
+                strokeWidth="2.75"
+                fill="none"
+              />
+              <path
+                d="M11 18.5L16 23.5L25.5 13"
+                stroke="#E7A33E"
+                strokeWidth="2.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
           <div>
@@ -165,16 +190,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
               className="flex items-center gap-2.5 p-1.5 sm:px-3 sm:py-2 bg-[#1A433E] hover:bg-[#20504A] border border-[#275B52] rounded-lg transition-all text-left cursor-pointer"
               id="role-switcher-button"
             >
-              <img 
-                src={currentUser.avatar} 
-                alt={currentUser.name} 
+              <img
+                src={currentUser.avatar}
+                alt={currentUser.name}
                 className="w-8 h-8 rounded-full object-cover border border-[#E7A33E]/50 shadow-xs shrink-0"
               />
               <div className="hidden sm:block leading-tight">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-medium text-[#FBF9F4]">{currentUser.name}</span>
+                  <span className="text-xs font-medium text-[#FBF9F4]">
+                    {currentUser.name}
+                  </span>
                   <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#2F6E5F] text-[#FBF9F4] font-medium uppercase tracking-wide">
-                    {role.replace('_', ' ')}
+                    {role.replace("_", " ")}
                   </span>
                 </div>
                 <div className="text-[11px] text-[#EFF3F1]/70 truncate max-w-[180px]">
@@ -186,7 +213,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
 
             {/* Persona Switcher Dropdown */}
             {roleMenuOpen && (
-              <div 
+              <div
                 className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#EFF3F1] text-[#1A2421] rounded-xl shadow-2xl border border-[#CBDAD6] py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
                 id="role-switcher-dropdown"
               >
@@ -210,17 +237,21 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
                           setRoleMenuOpen(false);
                         }}
                         className={`w-full flex items-start gap-3 p-2.5 rounded-lg text-left transition-colors cursor-pointer ${
-                          isSelected 
-                            ? 'bg-[#12332F] text-[#FBF9F4]' 
-                            : 'hover:bg-white text-[#1A2421]'
+                          isSelected
+                            ? "bg-[#12332F] text-[#FBF9F4]"
+                            : "hover:bg-white text-[#1A2421]"
                         }`}
                       >
-                        <div className={`p-2 rounded-lg shrink-0 ${isSelected ? 'bg-[#E7A33E] text-[#12332F]' : opt.color}`}>
+                        <div
+                          className={`p-2 rounded-lg shrink-0 ${isSelected ? "bg-[#E7A33E] text-[#12332F]" : opt.color}`}
+                        >
                           {opt.icon}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
-                            <span className={`text-xs font-medium ${isSelected ? 'text-[#FBF9F4]' : 'text-[#12332F]'}`}>
+                            <span
+                              className={`text-xs font-medium ${isSelected ? "text-[#FBF9F4]" : "text-[#12332F]"}`}
+                            >
                               {opt.label}
                             </span>
                             {isSelected && (
@@ -229,10 +260,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
                               </span>
                             )}
                           </div>
-                          <div className={`text-xs truncate ${isSelected ? 'text-[#EFF3F1]' : 'text-[#1A2421]'}`}>
+                          <div
+                            className={`text-xs truncate ${isSelected ? "text-[#EFF3F1]" : "text-[#1A2421]"}`}
+                          >
                             {opt.name}
                           </div>
-                          <div className={`text-[11px] truncate ${isSelected ? 'text-[#EFF3F1]/70' : 'text-[#1A2421]/60'}`}>
+                          <div
+                            className={`text-[11px] truncate ${isSelected ? "text-[#EFF3F1]/70" : "text-[#1A2421]/60"}`}
+                          >
                             {opt.title}
                           </div>
                         </div>
@@ -243,7 +278,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
 
                 <div className="mt-2 pt-2 border-t border-[#CBDAD6] px-3.5 text-[11px] text-[#1A2421]/60 flex items-center justify-between">
                   <span>QAS Institutional Governance</span>
-                  <span className="font-medium text-[#2F6E5F]">Harmattan 2024/25</span>
+                  <span className="font-medium text-[#2F6E5F]">
+                    Harmattan 2024/25
+                  </span>
                 </div>
               </div>
             )}
@@ -260,7 +297,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
               {currentUser.department} ({currentUser.faculty})
             </span>
             <span className="text-[#1A433E] hidden sm:inline">•</span>
-            <span className="font-mono text-[#EFF3F1]/70 hidden sm:inline">ID: {currentUser.identifier}</span>
+            <span className="font-mono text-[#EFF3F1]/70 hidden sm:inline">
+              ID: {currentUser.identifier}
+            </span>
           </div>
 
           <div className="flex items-center gap-3">

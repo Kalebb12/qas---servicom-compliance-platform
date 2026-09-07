@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useApp } from '../context/AppContext';
-import { 
-  Search, 
-  CheckCircle2, 
-  Clock, 
-  AlertTriangle, 
-  ShieldAlert, 
-  Star, 
-  FileText, 
+import React, { useState } from "react";
+import { useApp } from "../context/AppContext";
+import {
+  Search,
+  CheckCircle2,
+  Clock,
+  AlertTriangle,
+  ShieldAlert,
+  Star,
+  FileText,
   X,
-  UserCheck
-} from 'lucide-react';
+  UserCheck,
+} from "lucide-react";
 
 interface TrackComplaintModalProps {
   isOpen: boolean;
@@ -19,10 +19,10 @@ interface TrackComplaintModalProps {
   onSwitchToLeadership?: () => void;
 }
 
-export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({ 
-  isOpen, 
+export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
+  isOpen,
   onClose,
-  initialCode = ''
+  initialCode = "",
 }) => {
   const { complaints, rateComplaintResolution } = useApp();
   const [searchCode, setSearchCode] = useState(initialCode);
@@ -31,15 +31,17 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
   // Sync initialCode when opened
   React.useEffect(() => {
     if (isOpen) {
-      setSearchCode(initialCode || '');
+      setSearchCode(initialCode || "");
       setHasSearched(!!initialCode);
     }
   }, [isOpen, initialCode]);
 
   if (!isOpen) return null;
 
-  const foundComplaint = searchCode.trim() 
-    ? complaints.find(c => c.trackingCode.toLowerCase() === searchCode.trim().toLowerCase())
+  const foundComplaint = searchCode.trim()
+    ? complaints.find(
+        (c) => c.trackingCode.toLowerCase() === searchCode.trim().toLowerCase(),
+      )
     : null;
 
   const handleQuickCode = (code: string) => {
@@ -53,7 +55,9 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
         <div className="bg-slate-900 p-4 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Search className="w-4 h-4 text-amber-400" />
-            <h3 className="font-bold text-sm">Track Complaint / SERVICOM SLA Status</h3>
+            <h3 className="font-bold text-sm">
+              Track Complaint / SERVICOM SLA Status
+            </h3>
           </div>
           <button
             onClick={onClose}
@@ -65,7 +69,9 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
 
         <div className="p-5 space-y-4 text-xs">
           <div>
-            <label className="block text-slate-700 font-bold mb-1">Enter Tracking Code:</label>
+            <label className="block text-slate-700 font-bold mb-1">
+              Enter Tracking Code:
+            </label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -78,11 +84,11 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
                 className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono font-semibold uppercase bg-slate-50 focus:outline-hidden focus:ring-2 focus:ring-amber-500"
               />
             </div>
-            
+
             {/* Quick Suggestions */}
             <div className="flex items-center gap-1.5 mt-2 text-[11px] text-slate-500 flex-wrap">
               <span>Try sample dockets:</span>
-              {complaints.slice(0, 3).map(c => (
+              {complaints.slice(0, 3).map((c) => (
                 <button
                   key={c.id}
                   onClick={() => handleQuickCode(c.trackingCode)}
@@ -97,8 +103,12 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
           {hasSearched && searchCode.trim().length > 0 && !foundComplaint && (
             <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl text-center text-rose-700">
               <AlertTriangle className="w-5 h-5 mx-auto mb-1 text-rose-500" />
-              <p className="font-semibold">No docket found for "{searchCode}"</p>
-              <p className="text-[11px] text-slate-500 mt-0.5">Please check the code or contact the SERVICOM Nodal Desk.</p>
+              <p className="font-semibold">
+                No docket found for "{searchCode}"
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Please check the code or contact the SERVICOM Nodal Desk.
+              </p>
             </div>
           )}
 
@@ -113,22 +123,27 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
                     {foundComplaint.title}
                   </h4>
                   <div className="text-[11px] text-slate-500">
-                    Location: {foundComplaint.location} • Filed on {foundComplaint.submittedAt}
+                    Location: {foundComplaint.location} • Filed on{" "}
+                    {foundComplaint.submittedAt}
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${
-                    foundComplaint.status === 'resolved'
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : foundComplaint.isSlaBreached
-                      ? 'bg-rose-100 text-rose-800'
-                      : 'bg-amber-100 text-amber-800'
-                  }`}>
-                    {foundComplaint.status.replace('_', ' ')}
+                  <span
+                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${
+                      foundComplaint.status === "resolved"
+                        ? "bg-emerald-100 text-emerald-800"
+                        : foundComplaint.isSlaBreached
+                          ? "bg-rose-100 text-rose-800"
+                          : "bg-amber-100 text-amber-800"
+                    }`}
+                  >
+                    {foundComplaint.status.replace("_", " ")}
                   </span>
                   <div className="text-[10px] text-slate-500 mt-0.5">
-                    {foundComplaint.isSlaBreached ? 'SLA Breached' : `SLA: ${foundComplaint.slaHoursRemaining}h remaining`}
+                    {foundComplaint.isSlaBreached
+                      ? "SLA Breached"
+                      : `SLA: ${foundComplaint.slaHoursRemaining}h remaining`}
                   </div>
                 </div>
               </div>
@@ -148,8 +163,14 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
               )}
 
               <div className="text-[11px] text-slate-500 space-y-1 pt-1">
-                <div><strong>Assigned Unit:</strong> {foundComplaint.assignedUnit || 'SERVICOM Nodal Desk'}</div>
-                <div><strong>Assigned Officer:</strong> {foundComplaint.assignedOfficer || 'Mrs. Grace Danladi'}</div>
+                <div>
+                  <strong>Assigned Unit:</strong>{" "}
+                  {foundComplaint.assignedUnit || "SERVICOM Nodal Desk"}
+                </div>
+                <div>
+                  <strong>Assigned Officer:</strong>{" "}
+                  {foundComplaint.assignedOfficer || "Mrs. Grace Danladi"}
+                </div>
               </div>
             </div>
           )}

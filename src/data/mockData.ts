@@ -1,10 +1,10 @@
-import { 
-  UserProfile, 
-  Complaint, 
-  CourseEvaluation, 
-  QAAuditInspection, 
-  ServicomCharterMetric, 
-  FacultySummaryStat 
+import {
+  UserProfile,
+  Complaint,
+  CourseEvaluation,
+  QAAuditInspection,
+  ServicomCharterMetric,
+  FacultySummaryStat
 } from '../types';
 
 export const USER_PROFILES: Record<string, UserProfile> = {
