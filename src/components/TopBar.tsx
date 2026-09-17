@@ -1,40 +1,41 @@
-import React, { useState } from "react";
-import { useApp } from "../context/AppContext";
-import { AccessibilityControls } from "./AccessibilityControls";
-import {
-  Menu,
-  Search,
-  AlertTriangle,
-  Bell,
-  RotateCcw,
-  X,
+import React, { useState } from 'react';
+import { useApp } from '../context/AppContext';
+import { 
+  Menu, 
+  Search, 
+  AlertTriangle, 
+  Bell, 
+  RotateCcw, 
+  X, 
   ExternalLink,
   ChevronDown,
-} from "lucide-react";
+  Compass
+} from 'lucide-react';
 
 interface TopBarProps {
   onOpenTrackModal: (code?: string) => void;
+  onOpenDirectory: () => void;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
-  const {
-    sessionInfo,
-    complaints,
+export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal, onOpenDirectory }) => {
+  const { 
+    sessionInfo, 
+    complaints, 
     setIsMobileDrawerOpen,
     unreadNotificationsCount,
     setIsNotificationsOpen,
     resetAllData,
     currentUser,
-    role,
+    role
   } = useApp();
 
   const [alertExpanded, setAlertExpanded] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState('');
 
   // Count active urgent / SLA breached complaints
   const breachedComplaints = complaints.filter(
-    (c) => c.isSlaBreached && c.status !== "resolved" && c.status !== "closed",
+    c => c.isSlaBreached && c.status !== 'resolved' && c.status !== 'closed'
   );
   const breachedCount = breachedComplaints.length;
 
@@ -42,7 +43,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
     e.preventDefault();
     if (searchInput.trim()) {
       onOpenTrackModal(searchInput.trim());
-      setSearchInput("");
+      setSearchInput('');
       setIsSearchExpanded(false);
     } else {
       onOpenTrackModal();
@@ -67,9 +68,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-[#E7A33E] animate-pulse shrink-0 hidden xs:inline-block" />
             <span className="font-medium text-xs text-[#FBF9F4] truncate">
-              <span className="hidden sm:inline">
-                Apex University Quality Assurance System
-              </span>
+              <span className="hidden sm:inline">Apex University Quality Assurance System</span>
               <span className="sm:hidden">Apex QAS</span>
             </span>
             <span className="text-[#1A433E] hidden md:inline">•</span>
@@ -84,15 +83,10 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
 
         {/* Right Side: Compact Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-          <AccessibilityControls />
-
-          {/* Compact Expandable Search / Complaint Tracker Icon */}
+          {/* Compact Expandable Search / Grievance Tracker Icon */}
           <div className="relative">
             {isSearchExpanded ? (
-              <form
-                onSubmit={handleSearchSubmit}
-                className="flex items-center gap-1"
-              >
+              <form onSubmit={handleSearchSubmit} className="flex items-center gap-1">
                 <input
                   type="text"
                   value={searchInput}
@@ -119,13 +113,23 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
               <button
                 onClick={() => setIsSearchExpanded(true)}
                 className="p-1.5 rounded-lg text-[#EFF3F1]/70 hover:text-[#E7A33E] hover:bg-[#1A433E] transition-colors cursor-pointer"
-                title="Search or track complaint code"
-                aria-label="Search complaint"
+                title="Search or track grievance code"
+                aria-label="Search grievance"
               >
                 <Search className="w-4 h-4" />
               </button>
             )}
           </div>
+
+          {/* "Where Do I Go?" Service Directory Trigger */}
+          <button
+            onClick={onOpenDirectory}
+            className="p-1.5 rounded-lg text-[#EFF3F1]/70 hover:text-[#E7A33E] hover:bg-[#1A433E] transition-colors cursor-pointer"
+            title="Where do I go? Service directory"
+            aria-label="Open service directory"
+          >
+            <Compass className="w-4 h-4" />
+          </button>
 
           {/* Compact Escalation/Alert Icon-Badge (Expands on Tap) */}
           {breachedCount > 0 && (
@@ -147,7 +151,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
 
               {/* Alert Expanded Popover */}
               {alertExpanded && (
-                <div
+                <div 
                   className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#EFF3F1] text-[#1A2421] rounded-xl shadow-2xl border border-[#CBDAD6] p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
                   role="region"
                   aria-label="Escalation alert details"
@@ -161,7 +165,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
                         SLA Escalation In Effect
                       </span>
                     </div>
-                    <button
+                    <button 
                       onClick={() => setAlertExpanded(false)}
                       className="text-[#526460] hover:text-[#1A2421]"
                     >
@@ -171,8 +175,8 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
 
                   <div className="space-y-2">
                     {breachedComplaints.slice(0, 2).map((item) => (
-                      <div
-                        key={item.id}
+                      <div 
+                        key={item.id} 
                         className="bg-white p-2.5 rounded-lg border border-[#CBDAD6] text-xs space-y-1"
                       >
                         <div className="flex items-center justify-between">
@@ -187,8 +191,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
                           {item.title}
                         </div>
                         <div className="text-[11px] text-[#526460]">
-                          Location: {item.location} • Status:{" "}
-                          {item.status.replace("_", " ")}
+                          Location: {item.location} • Status: {item.status.replace('_', ' ')}
                         </div>
                       </div>
                     ))}
@@ -242,14 +245,14 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenTrackModal }) => {
           </button>
 
           {/* User Role Indicator (Clickable to open drawer on mobile) */}
-          <div
+          <div 
             onClick={() => setIsMobileDrawerOpen(true)}
             className="flex items-center gap-1.5 pl-1.5 border-l border-[#1A433E] cursor-pointer group"
-            title={`${currentUser.name} (${role.replace("_", " ")})`}
+            title={`${currentUser.name} (${role.replace('_', ' ')})`}
           >
-            <img
-              src={currentUser.avatar}
-              alt={currentUser.name}
+            <img 
+              src={currentUser.avatar} 
+              alt={currentUser.name} 
               className="w-6 h-6 rounded-full object-cover border border-[#E7A33E]/60 shadow-xs"
             />
             <span className="hidden lg:inline text-xs font-medium text-[#FBF9F4] max-w-[100px] truncate">

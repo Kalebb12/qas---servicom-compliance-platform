@@ -84,6 +84,8 @@ export const StudentPortal: React.FC = () => {
     rateComplaintResolution,
     activeNav,
     setActiveNav,
+    directoryPrefillCategory,
+    setDirectoryPrefillCategory
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<
@@ -133,10 +135,19 @@ export const StudentPortal: React.FC = () => {
   const [complaintDept, setComplaintDept] = useState(currentUser.department);
   const [complaintDescription, setComplaintDescription] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [attachmentName, setAttachmentName] = useState("");
-  const [generatedTrackingCode, setGeneratedTrackingCode] = useState<
-    string | null
-  >(null);
+  const [attachmentName, setAttachmentName] = useState('');
+  const [generatedTrackingCode, setGeneratedTrackingCode] = useState<string | null>(null);
+
+  // If the student arrived here via "File a complaint about this" from the
+  // Service Directory, pre-select the matching category and jump to the form.
+  useEffect(() => {
+    if (directoryPrefillCategory) {
+      setComplaintCategory(directoryPrefillCategory);
+      setActiveTab('lodge');
+      setActiveNav('lodge');
+      setDirectoryPrefillCategory(null);
+    }
+  }, [directoryPrefillCategory, setActiveNav, setDirectoryPrefillCategory]);
   const [isRecordingComplaint, setIsRecordingComplaint] = useState(false);
   const [isTranscribingComplaint, setIsTranscribingComplaint] = useState(false);
   const [audioRecordingError, setAudioRecordingError] = useState("");
@@ -639,14 +650,10 @@ export const StudentPortal: React.FC = () => {
                       id: "harassment_victimization",
                       label: "Victimization / Harassment",
                     },
-                    {
-                      id: "library_labs",
-                      label: "Laboratory / Equipment Fault",
-                    },
-                    {
-                      id: "administrative_delay",
-                      label: "Registry / Transcript Delay",
-                    },
+                    
+                    { id: 'library_labs', label: 'Laboratory / Equipment Fault' },
+                    { id: 'administrative_delay', label: 'Registry / Transcript Delay' },
+                    { id: 'security_welfare', label: 'Security / Health & Welfare' }
                   ].map((cat) => (
                     <button
                       type="button"
