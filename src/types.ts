@@ -12,7 +12,7 @@ export interface UserProfile {
   avatar: string;
 }
 
-export type ComplaintCategory = 
+export type ComplaintCategory =
   | 'lecture_delivery'
   | 'missing_grades'
   | 'facility_breakdown'
@@ -23,7 +23,7 @@ export type ComplaintCategory =
 
 export type ComplaintPriority = 'standard' | 'high' | 'urgent';
 
-export type ComplaintStatus = 
+export type ComplaintStatus =
   | 'submitted'
   | 'triaged'
   | 'investigating'
@@ -150,12 +150,14 @@ export interface QAAuditInspection {
 
 export interface ServicomCharterMetric {
   id: string;
+  serviceCode: string;
   serviceTitle: string;
   responsibleUnit: string;
   charterSlaDays: number;
   averageActualDays: number;
   targetCompliancePercent: number;
   currentCompliancePercent: number;
+  totalComplaintsThisSession: number;
   status: 'compliant' | 'warning' | 'breached';
   quarterTrend: '+2.4%' | '-1.8%' | '+0.5%' | '-4.2%';
 }

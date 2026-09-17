@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { AccessibilityControls } from "./AccessibilityControls";
 import {

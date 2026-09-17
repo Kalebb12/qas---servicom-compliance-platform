@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import {
   BarChart,
@@ -164,8 +165,8 @@ export const LeadershipDashboard: React.FC = () => {
       ? criticalAlerts
       : selectedAlertFilter === "audits"
         ? criticalAlerts.filter(
-            (a) => a.type === "audit" || a.type === "evaluation",
-          )
+          (a) => a.type === "audit" || a.type === "evaluation",
+        )
         : criticalAlerts.filter((a) => a.type === "complaint");
 
   return (
@@ -429,11 +430,10 @@ export const LeadershipDashboard: React.FC = () => {
                 <button
                   key={f.id}
                   onClick={() => setSelectedAlertFilter(f.id as any)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
-                    selectedAlertFilter === f.id
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${selectedAlertFilter === f.id
                       ? "bg-[#12332F] text-[#FBF9F4]"
                       : "bg-[#EFF3F1] text-[#1A2421] hover:bg-[#CBDAD6]/60"
-                  }`}
+                    }`}
                 >
                   {f.label}
                 </button>
@@ -590,11 +590,10 @@ export const LeadershipDashboard: React.FC = () => {
                   </td>
                   <td className="py-3.5 px-3">
                     <span
-                      className={`px-2.5 py-1 rounded-full text-[11px] font-medium inline-flex items-center gap-1 ${
-                        f.qaAuditPassRate >= 90
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-medium inline-flex items-center gap-1 ${f.qaAuditPassRate >= 90
                           ? "bg-[#2F6E5F]/15 text-[#2F6E5F] border border-[#2F6E5F]/30"
                           : "bg-[#E7A33E]/15 text-[#1A2421] border border-[#E7A33E]/30"
-                      }`}
+                        }`}
                     >
                       <span
                         className={`w-1.5 h-1.5 rounded-full ${f.qaAuditPassRate >= 90 ? "bg-[#2F6E5F]" : "bg-[#E7A33E]"}`}
