@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { UserRole } from "../types";
 import {
@@ -45,47 +46,47 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
     icon: React.ReactNode;
     color: string;
   }[] = [
-    {
-      role: "student",
-      label: "Student Portal",
-      name: "Chinedu Okafor",
-      title: "Undergraduate (CSC 300L)",
-      icon: <GraduationCap className="w-4 h-4" />,
-      color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
-    },
-    {
-      role: "lecturer",
-      label: "Lecturer Portal",
-      name: "Dr. Miriam Adeleke",
-      title: "Senior Lecturer, Ph.D",
-      icon: <BookOpen className="w-4 h-4" />,
-      color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
-    },
-    {
-      role: "qa_officer",
-      label: "QA Inspector",
-      name: "Engr. Bello Ibrahim",
-      title: "Chief Academic Quality Auditor",
-      icon: <ClipboardCheck className="w-4 h-4" />,
-      color: "bg-[#12332F]/10 text-[#12332F] border-[#12332F]/20",
-    },
-    {
-      role: "servicom_officer",
-      label: "SERVICOM Nodal Desk",
-      name: "Mrs. Grace Danladi",
-      title: "Complaint Resolution Officer",
-      icon: <LifeBuoy className="w-4 h-4" />,
-      color: "bg-[#E7A33E]/20 text-[#1A2421] border-[#E7A33E]/40",
-    },
-    {
-      role: "leadership",
-      label: "University Leadership",
-      name: "Prof. Olumide Balogun",
-      title: "DVC (Academic & QA Oversight)",
-      icon: <Landmark className="w-4 h-4" />,
-      color: "bg-[#12332F] text-[#FBF9F4] border-[#12332F]",
-    },
-  ];
+      {
+        role: "student",
+        label: "Student Portal",
+        name: "Chinedu Okafor",
+        title: "Undergraduate (CSC 300L)",
+        icon: <GraduationCap className="w-4 h-4" />,
+        color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
+      },
+      {
+        role: "lecturer",
+        label: "Lecturer Portal",
+        name: "Dr. Miriam Adeleke",
+        title: "Senior Lecturer, Ph.D",
+        icon: <BookOpen className="w-4 h-4" />,
+        color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
+      },
+      {
+        role: "qa_officer",
+        label: "QA Inspector",
+        name: "Engr. Bello Ibrahim",
+        title: "Chief Academic Quality Auditor",
+        icon: <ClipboardCheck className="w-4 h-4" />,
+        color: "bg-[#12332F]/10 text-[#12332F] border-[#12332F]/20",
+      },
+      {
+        role: "servicom_officer",
+        label: "SERVICOM Nodal Desk",
+        name: "Mrs. Grace Danladi",
+        title: "Complaint Resolution Officer",
+        icon: <LifeBuoy className="w-4 h-4" />,
+        color: "bg-[#E7A33E]/20 text-[#1A2421] border-[#E7A33E]/40",
+      },
+      {
+        role: "leadership",
+        label: "University Leadership",
+        name: "Prof. Olumide Balogun",
+        title: "DVC (Academic & QA Oversight)",
+        icon: <Landmark className="w-4 h-4" />,
+        color: "bg-[#12332F] text-[#FBF9F4] border-[#12332F]",
+      },
+    ];
 
   return (
     <header className="bg-[#12332F] border-b border-[#1A433E] sticky top-0 z-40 shadow-sm text-[#FBF9F4]">
@@ -236,11 +237,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
                           setRole(opt.role);
                           setRoleMenuOpen(false);
                         }}
-                        className={`w-full flex items-start gap-3 p-2.5 rounded-lg text-left transition-colors cursor-pointer ${
-                          isSelected
+                        className={`w-full flex items-start gap-3 p-2.5 rounded-lg text-left transition-colors cursor-pointer ${isSelected
                             ? "bg-[#12332F] text-[#FBF9F4]"
                             : "hover:bg-white text-[#1A2421]"
-                        }`}
+                          }`}
                       >
                         <div
                           className={`p-2 rounded-lg shrink-0 ${isSelected ? "bg-[#E7A33E] text-[#12332F]" : opt.color}`}

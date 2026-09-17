@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { UserRole, MainNavItem } from "../types";
 import {
@@ -45,7 +46,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
 
   // Pending evaluations for student
   const pendingEvalsCount = courseEvaluations.filter(
-    (c) => !c.studentSubmitted,
+    (c) => !c.evaluatedByCurrentStudent,
   ).length;
   // Active complaints count
   const activeComplaintsCount = complaints.filter(
@@ -60,47 +61,47 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
     icon: React.ReactNode;
     color: string;
   }[] = [
-    {
-      role: "student",
-      label: "Student Portal",
-      name: "Chinedu Okafor",
-      title: "Undergraduate (CSC 300L)",
-      icon: <GraduationCap className="w-4 h-4" />,
-      color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
-    },
-    {
-      role: "lecturer",
-      label: "Lecturer Portal",
-      name: "Dr. Miriam Adeleke",
-      title: "Senior Lecturer, Ph.D",
-      icon: <BookOpen className="w-4 h-4" />,
-      color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
-    },
-    {
-      role: "qa_officer",
-      label: "QA Inspector",
-      name: "Engr. Bello Ibrahim",
-      title: "Chief Academic Quality Auditor",
-      icon: <ClipboardCheck className="w-4 h-4" />,
-      color: "bg-[#12332F]/10 text-[#12332F] border-[#12332F]/20",
-    },
-    {
-      role: "servicom_officer",
-      label: "SERVICOM Nodal Desk",
-      name: "Mrs. Grace Danladi",
-      title: "Complaint Resolution Officer",
-      icon: <LifeBuoy className="w-4 h-4" />,
-      color: "bg-[#E7A33E]/20 text-[#1A2421] border-[#E7A33E]/40",
-    },
-    {
-      role: "leadership",
-      label: "University Leadership",
-      name: "Prof. Olumide Balogun",
-      title: "DVC (Academic & QA Oversight)",
-      icon: <Landmark className="w-4 h-4" />,
-      color: "bg-[#12332F] text-[#FBF9F4] border-[#12332F]",
-    },
-  ];
+      {
+        role: "student",
+        label: "Student Portal",
+        name: "Chinedu Okafor",
+        title: "Undergraduate (CSC 300L)",
+        icon: <GraduationCap className="w-4 h-4" />,
+        color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
+      },
+      {
+        role: "lecturer",
+        label: "Lecturer Portal",
+        name: "Dr. Miriam Adeleke",
+        title: "Senior Lecturer, Ph.D",
+        icon: <BookOpen className="w-4 h-4" />,
+        color: "bg-[#2F6E5F]/15 text-[#2F6E5F] border-[#2F6E5F]/30",
+      },
+      {
+        role: "qa_officer",
+        label: "QA Inspector",
+        name: "Engr. Bello Ibrahim",
+        title: "Chief Academic Quality Auditor",
+        icon: <ClipboardCheck className="w-4 h-4" />,
+        color: "bg-[#12332F]/10 text-[#12332F] border-[#12332F]/20",
+      },
+      {
+        role: "servicom_officer",
+        label: "SERVICOM Nodal Desk",
+        name: "Mrs. Grace Danladi",
+        title: "Complaint Resolution Officer",
+        icon: <LifeBuoy className="w-4 h-4" />,
+        color: "bg-[#E7A33E]/20 text-[#1A2421] border-[#E7A33E]/40",
+      },
+      {
+        role: "leadership",
+        label: "University Leadership",
+        name: "Prof. Olumide Balogun",
+        title: "DVC (Academic & QA Oversight)",
+        icon: <Landmark className="w-4 h-4" />,
+        color: "bg-[#12332F] text-[#FBF9F4] border-[#12332F]",
+      },
+    ];
 
   const navItems: {
     id: MainNavItem;
@@ -109,44 +110,44 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
     badge?: string | number;
     badgeType?: "amber" | "teal" | "neutral";
   }[] = [
-    {
-      id: "dashboard",
-      label: "Dashboard",
-      icon: <LayoutDashboard className="w-4 h-4 shrink-0" />,
-    },
-    {
-      id: "evaluations",
-      label: "Course & Lecturer Evaluation",
-      icon: <BookOpen className="w-4 h-4 shrink-0" />,
-      badge:
-        role === "student" && pendingEvalsCount > 0
-          ? `${pendingEvalsCount} pending`
-          : undefined,
-      badgeType: "amber",
-    },
-    {
-      id: "lodge",
-      label: "Make a Complaint",
-      icon: <ShieldAlert className="w-4 h-4 shrink-0" />,
-    },
-    {
-      id: "track",
-      label: "Track My Complaints",
-      icon: <Clock className="w-4 h-4 shrink-0" />,
-      badge: activeComplaintsCount > 0 ? `${activeComplaintsCount}` : undefined,
-      badgeType: "teal",
-    },
-    {
-      id: "notifications",
-      label: "Notifications",
-      icon: <Bell className="w-4 h-4 shrink-0" />,
-      badge:
-        unreadNotificationsCount > 0
-          ? `${unreadNotificationsCount}`
-          : undefined,
-      badgeType: "amber",
-    },
-  ];
+      {
+        id: "dashboard",
+        label: "Dashboard",
+        icon: <LayoutDashboard className="w-4 h-4 shrink-0" />,
+      },
+      {
+        id: "evaluations",
+        label: "Course & Lecturer Evaluation",
+        icon: <BookOpen className="w-4 h-4 shrink-0" />,
+        badge:
+          role === "student" && pendingEvalsCount > 0
+            ? `${pendingEvalsCount} pending`
+            : undefined,
+        badgeType: "amber",
+      },
+      {
+        id: "lodge",
+        label: "Make a Complaint",
+        icon: <ShieldAlert className="w-4 h-4 shrink-0" />,
+      },
+      {
+        id: "track",
+        label: "Track My Complaints",
+        icon: <Clock className="w-4 h-4 shrink-0" />,
+        badge: activeComplaintsCount > 0 ? `${activeComplaintsCount}` : undefined,
+        badgeType: "teal",
+      },
+      {
+        id: "notifications",
+        label: "Notifications",
+        icon: <Bell className="w-4 h-4 shrink-0" />,
+        badge:
+          unreadNotificationsCount > 0
+            ? `${unreadNotificationsCount}`
+            : undefined,
+        badgeType: "amber",
+      },
+    ];
 
   const handleNavClick = (id: MainNavItem) => {
     if (id === "notifications") {
@@ -250,11 +251,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
             <button
               key={item.id}
               onClick={() => handleNavClick(item.id)}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all text-left cursor-pointer group ${
-                isActive
-                  ? "bg-[#E7A33E] text-[#12332F] font-semibold shadow-xs"
-                  : "text-[#EFF3F1]/80 hover:bg-[#1A433E] hover:text-[#FBF9F4]"
-              }`}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all text-left cursor-pointer group ${isActive
+                ? "bg-[#E7A33E] text-[#12332F] font-semibold shadow-xs"
+                : "text-[#EFF3F1]/80 hover:bg-[#1A433E] hover:text-[#FBF9F4]"
+                }`}
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 <span
@@ -271,13 +271,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
 
               {item.badge && (
                 <span
-                  className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0 ml-1.5 ${
-                    isActive
-                      ? "bg-[#12332F] text-[#E7A33E]"
-                      : item.badgeType === "amber"
-                        ? "bg-[#E7A33E]/20 text-[#E7A33E] border border-[#E7A33E]/40"
-                        : "bg-[#2F6E5F]/30 text-[#EFF3F1] border border-[#2F6E5F]/50"
-                  }`}
+                  className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0 ml-1.5 ${isActive
+                    ? "bg-[#12332F] text-[#E7A33E]"
+                    : item.badgeType === "amber"
+                      ? "bg-[#E7A33E]/20 text-[#E7A33E] border border-[#E7A33E]/40"
+                      : "bg-[#2F6E5F]/30 text-[#EFF3F1] border border-[#2F6E5F]/50"
+                    }`}
                 >
                   {item.badge}
                 </span>
@@ -371,11 +370,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal }) => {
                       setRoleMenuOpen(false);
                       setIsMobileDrawerOpen(false);
                     }}
-                    className={`w-full flex items-center gap-2.5 p-2 rounded-lg text-left transition-colors cursor-pointer ${
-                      isSelected
-                        ? "bg-[#12332F] text-[#FBF9F4]"
-                        : "hover:bg-white text-[#1A2421]"
-                    }`}
+                    className={`w-full flex items-center gap-2.5 p-2 rounded-lg text-left transition-colors cursor-pointer ${isSelected
+                      ? "bg-[#12332F] text-[#FBF9F4]"
+                      : "hover:bg-white text-[#1A2421]"
+                      }`}
                   >
                     <div
                       className={`p-1.5 rounded-md shrink-0 ${isSelected ? "bg-[#E7A33E] text-[#12332F]" : opt.color}`}

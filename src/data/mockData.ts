@@ -537,56 +537,66 @@ export const INITIAL_QA_AUDITS: QAAuditInspection[] = [
 export const SERVICOM_CHARTER_METRICS: ServicomCharterMetric[] = [
   {
     id: 'scm_1',
+    serviceCode: 'EXAM-RESULTS',
     serviceTitle: 'Semester Examination Results Publication',
     responsibleUnit: 'Senate & Departmental Exam Boards',
     charterSlaDays: 28,
     averageActualDays: 24.5,
     targetCompliancePercent: 95,
     currentCompliancePercent: 92.4,
+    totalComplaintsThisSession: 118,
     status: 'compliant',
     quarterTrend: '+2.4%'
   },
   {
     id: 'scm_2',
+    serviceCode: 'TRANSCRIPTS',
     serviceTitle: 'Official Academic Transcript Issuance',
     responsibleUnit: 'Academic Affairs Registry',
     charterSlaDays: 5,
     averageActualDays: 4.1,
     targetCompliancePercent: 98,
     currentCompliancePercent: 96.8,
+    totalComplaintsThisSession: 86,
     status: 'compliant',
     quarterTrend: '+0.5%'
   },
   {
     id: 'scm_3',
+    serviceCode: 'COMPLAINT-REDRESS',
     serviceTitle: 'Student Complaint Resolution',
     responsibleUnit: 'Institutional SERVICOM Directorate',
     charterSlaDays: 3,
     averageActualDays: 2.8,
     targetCompliancePercent: 90,
     currentCompliancePercent: 88.5,
+    totalComplaintsThisSession: 214,
     status: 'warning',
     quarterTrend: '-1.8%'
   },
   {
     id: 'scm_4',
+    serviceCode: 'HOSTEL-MAINT',
     serviceTitle: 'Hostel Maintenance & Electrical Breakdown Redress',
     responsibleUnit: 'Student Affairs & Physical Works',
     charterSlaDays: 2,
     averageActualDays: 3.4,
     targetCompliancePercent: 90,
     currentCompliancePercent: 74.2,
+    totalComplaintsThisSession: 93,
     status: 'breached',
     quarterTrend: '-4.2%'
   },
   {
     id: 'scm_5',
+    serviceCode: 'CA-DISPLAY',
     serviceTitle: 'Continuous Assessment (CA) Mark Display Before Exams',
     responsibleUnit: 'Academic Faculties (Deans Oversight)',
     charterSlaDays: 14,
     averageActualDays: 13.1,
     targetCompliancePercent: 100,
     currentCompliancePercent: 94.0,
+    totalComplaintsThisSession: 67,
     status: 'compliant',
     quarterTrend: '+2.4%'
   }

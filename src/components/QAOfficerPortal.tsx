@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { QAAuditInspection, QAChecklist } from '../types';
-import { 
-  ClipboardCheck, 
-  CheckCircle2, 
-  AlertTriangle, 
-  XCircle, 
-  Search, 
-  Filter, 
-  MapPin, 
-  Clock, 
-  Users, 
-  FileText, 
-  Plus, 
+import {
+  ClipboardCheck,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle,
+  Search,
+  Filter,
+  MapPin,
+  Clock,
+  Users,
+  FileText,
+  Plus,
   Send,
   Building2,
   Sparkles,
@@ -86,7 +87,7 @@ export const QAOfficerPortal: React.FC = () => {
   };
 
   const currentScore = calculateScore();
-  const calculatedStatus: 'passed' | 'conditional_pass' | 'non_compliant' = 
+  const calculatedStatus: 'passed' | 'conditional_pass' | 'non_compliant' =
     currentScore >= 80 ? 'passed' : currentScore >= 55 ? 'conditional_pass' : 'non_compliant';
 
   const handleSubmitAudit = (e: React.FormEvent) => {
@@ -121,7 +122,7 @@ export const QAOfficerPortal: React.FC = () => {
   // Filtered audits
   const filteredAudits = qaAudits.filter(a => {
     const matchesStatus = filterStatus === 'all' || a.status === filterStatus;
-    const matchesSearch = 
+    const matchesSearch =
       a.hallName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       a.courseCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
       a.scheduledLecturer.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -169,11 +170,10 @@ export const QAOfficerPortal: React.FC = () => {
         <div className="flex border-b border-[#1A433E] mt-6 gap-2 text-sm overflow-x-auto">
           <button
             onClick={() => setActiveTab('checklist')}
-            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${
-              activeTab === 'checklist'
+            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${activeTab === 'checklist'
                 ? 'border-[#E7A33E] text-[#E7A33E]'
                 : 'border-transparent text-[#EFF3F1]/70 hover:text-white'
-            }`}
+              }`}
           >
             <Plus className="w-4 h-4" />
             <span>Run Digital Audit Checklist</span>
@@ -181,11 +181,10 @@ export const QAOfficerPortal: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('registry')}
-            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${
-              activeTab === 'registry'
+            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${activeTab === 'registry'
                 ? 'border-[#E7A33E] text-[#E7A33E]'
                 : 'border-transparent text-[#EFF3F1]/70 hover:text-white'
-            }`}
+              }`}
           >
             <FileText className="w-4 h-4" />
             <span>Campus Audit Registry ({qaAudits.length})</span>
@@ -200,13 +199,12 @@ export const QAOfficerPortal: React.FC = () => {
             {/* Live Score Floating Ribbon */}
             <div className="bg-[#12332F] text-[#FBF9F4] rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 border border-[#1A433E]">
               <div className="flex items-center gap-3">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-medium text-lg ${
-                  calculatedStatus === 'passed'
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-medium text-lg ${calculatedStatus === 'passed'
                     ? 'bg-[#2F6E5F] text-[#FBF9F4]'
                     : calculatedStatus === 'conditional_pass'
-                    ? 'bg-[#E7A33E] text-[#12332F]'
-                    : 'bg-[#B93826] text-white'
-                }`}>
+                      ? 'bg-[#E7A33E] text-[#12332F]'
+                      : 'bg-[#B93826] text-white'
+                  }`}>
                   {currentScore}%
                 </div>
                 <div>
@@ -373,11 +371,10 @@ export const QAOfficerPortal: React.FC = () => {
                         type="button"
                         key={opt.id}
                         onClick={() => setChecklist(prev => ({ ...prev, lecturerPunctuality: opt.id as any }))}
-                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
-                          checklist.lecturerPunctuality === opt.id
+                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${checklist.lecturerPunctuality === opt.id
                             ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
                             : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
-                        }`}
+                          }`}
                       >
                         {opt.label}
                       </button>
@@ -401,11 +398,10 @@ export const QAOfficerPortal: React.FC = () => {
                         type="button"
                         key={opt.id}
                         onClick={() => setChecklist(prev => ({ ...prev, audiovisualStatus: opt.id as any }))}
-                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
-                          checklist.audiovisualStatus === opt.id
+                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${checklist.audiovisualStatus === opt.id
                             ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
                             : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
-                        }`}
+                          }`}
                       >
                         {opt.label}
                       </button>
@@ -429,11 +425,10 @@ export const QAOfficerPortal: React.FC = () => {
                         type="button"
                         key={opt.id}
                         onClick={() => setChecklist(prev => ({ ...prev, hallCleanliness: opt.id as any }))}
-                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
-                          checklist.hallCleanliness === opt.id
+                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${checklist.hallCleanliness === opt.id
                             ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
                             : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
-                        }`}
+                          }`}
                       >
                         {opt.label}
                       </button>
@@ -457,11 +452,10 @@ export const QAOfficerPortal: React.FC = () => {
                         type="button"
                         key={opt.id}
                         onClick={() => setChecklist(prev => ({ ...prev, seatingAdequacy: opt.id as any }))}
-                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
-                          checklist.seatingAdequacy === opt.id
+                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${checklist.seatingAdequacy === opt.id
                             ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
                             : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
-                        }`}
+                          }`}
                       >
                         {opt.label}
                       </button>
@@ -484,11 +478,10 @@ export const QAOfficerPortal: React.FC = () => {
                         type="button"
                         key={v.id}
                         onClick={() => setChecklist(prev => ({ ...prev, ventilationAndLighting: v.id as any }))}
-                        className={`flex-1 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${
-                          checklist.ventilationAndLighting === v.id
+                        className={`flex-1 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${checklist.ventilationAndLighting === v.id
                             ? 'bg-purple-600 text-white border-purple-600'
                             : 'bg-white text-slate-700 border-slate-300'
-                        }`}
+                          }`}
                       >
                         {v.label}
                       </button>
@@ -620,7 +613,7 @@ export const QAOfficerPortal: React.FC = () => {
 
           <div className="space-y-3">
             {filteredAudits.map((item) => (
-              <div 
+              <div
                 key={item.id}
                 className="bg-white rounded-xl border border-[#CBDAD6] p-5 shadow-xs hover:border-[#12332F]/40 transition-all space-y-3"
               >
@@ -654,13 +647,12 @@ export const QAOfficerPortal: React.FC = () => {
                       <span className="text-xl font-medium text-[#1A2421] font-mono">
                         {item.overallScorePercentage}%
                       </span>
-                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full uppercase ${
-                        item.status === 'passed'
+                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full uppercase ${item.status === 'passed'
                           ? 'bg-[#2F6E5F]/15 text-[#2F6E5F] border border-[#2F6E5F]/30'
                           : item.status === 'conditional_pass'
-                          ? 'bg-[#E7A33E]/20 text-[#8F5A0E] border border-[#E7A33E]/40'
-                          : 'bg-[#B93826]/15 text-[#B93826] border border-[#B93826]/30'
-                      }`}>
+                            ? 'bg-[#E7A33E]/20 text-[#8F5A0E] border border-[#E7A33E]/40'
+                            : 'bg-[#B93826]/15 text-[#B93826] border border-[#B93826]/30'
+                        }`}>
                         {item.status === 'passed' ? 'Compliant' : item.status === 'conditional_pass' ? 'Action Notice' : 'Attention Required'}
                       </span>
                     </div>

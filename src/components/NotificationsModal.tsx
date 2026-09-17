@@ -1,23 +1,23 @@
-import React from 'react';
+import * as React from 'react';
 import { useApp } from '../context/AppContext';
-import { 
-  Bell, 
-  X, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Clock, 
-  BookOpen, 
-  CheckCheck, 
+import {
+  Bell,
+  X,
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+  BookOpen,
+  CheckCheck,
   ArrowRight,
   ShieldAlert
 } from 'lucide-react';
 
 export const NotificationsModal: React.FC = () => {
-  const { 
-    isNotificationsOpen, 
-    setIsNotificationsOpen, 
-    notifications, 
-    markNotificationAsRead, 
+  const {
+    isNotificationsOpen,
+    setIsNotificationsOpen,
+    notifications,
+    markNotificationAsRead,
     markAllNotificationsAsRead,
     setActiveNav
   } = useApp();
@@ -26,7 +26,7 @@ export const NotificationsModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
-      <div 
+      <div
         className="bg-[#EFF3F1] border border-[#CBDAD6] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[85vh] font-sans text-[#1A2421]"
         role="dialog"
         aria-modal="true"
@@ -82,11 +82,10 @@ export const NotificationsModal: React.FC = () => {
               <div
                 key={item.id}
                 onClick={() => markNotificationAsRead(item.id)}
-                className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
-                  item.isRead 
-                    ? 'bg-white border-[#CBDAD6]/70 text-[#526460]' 
+                className={`p-3.5 rounded-xl border transition-all cursor-pointer ${item.isRead
+                    ? 'bg-white border-[#CBDAD6]/70 text-[#526460]'
                     : 'bg-white border-[#12332F]/40 shadow-xs ring-1 ring-[#12332F]/10'
-                }`}
+                  }`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
