@@ -1,10 +1,11 @@
-import {
-  UserProfile,
-  Complaint,
-  CourseEvaluation,
-  QAAuditInspection,
-  ServicomCharterMetric,
-  FacultySummaryStat
+import { 
+  UserProfile, 
+  Complaint, 
+  CourseEvaluation, 
+  QAAuditInspection, 
+  ServicomCharterMetric, 
+  FacultySummaryStat,
+  ServiceDirectoryEntry
 } from '../types';
 
 export const USER_PROFILES: Record<string, UserProfile> = {
@@ -546,7 +547,7 @@ export const SERVICOM_CHARTER_METRICS: ServicomCharterMetric[] = [
     currentCompliancePercent: 92.4,
     totalComplaintsThisSession: 118,
     status: 'compliant',
-    quarterTrend: '+2.4%'
+    quarterTrend: '+2.4%',
   },
   {
     id: 'scm_2',
@@ -559,7 +560,7 @@ export const SERVICOM_CHARTER_METRICS: ServicomCharterMetric[] = [
     currentCompliancePercent: 96.8,
     totalComplaintsThisSession: 86,
     status: 'compliant',
-    quarterTrend: '+0.5%'
+    quarterTrend: '+0.5%',
   },
   {
     id: 'scm_3',
@@ -572,7 +573,7 @@ export const SERVICOM_CHARTER_METRICS: ServicomCharterMetric[] = [
     currentCompliancePercent: 88.5,
     totalComplaintsThisSession: 214,
     status: 'warning',
-    quarterTrend: '-1.8%'
+    quarterTrend: '-1.8%',
   },
   {
     id: 'scm_4',
@@ -585,7 +586,7 @@ export const SERVICOM_CHARTER_METRICS: ServicomCharterMetric[] = [
     currentCompliancePercent: 74.2,
     totalComplaintsThisSession: 93,
     status: 'breached',
-    quarterTrend: '-4.2%'
+    quarterTrend: '-4.2%',
   },
   {
     id: 'scm_5',
@@ -598,7 +599,7 @@ export const SERVICOM_CHARTER_METRICS: ServicomCharterMetric[] = [
     currentCompliancePercent: 94.0,
     totalComplaintsThisSession: 67,
     status: 'compliant',
-    quarterTrend: '+2.4%'
+    quarterTrend: '+2.4%',
   }
 ];
 
@@ -647,5 +648,138 @@ export const FACULTY_SUMMARY_STATS: FacultySummaryStat[] = [
     qaAuditPassRate: 82.4,
     openComplaints: 8,
     slaBreachRate: 7.2
+  }
+];
+
+export const SERVICE_DIRECTORY: ServiceDirectoryEntry[] = [
+  {
+    id: 'registration',
+    label: 'Course Registration',
+    shortDescription: 'Add/drop courses, registration errors, portal lock issues',
+    responsibleUnit: 'Academic Affairs — Registration Unit',
+    building: 'Senate Building, Ground Floor',
+    contactEmail: 'registration@apex.edu.ng',
+    contactPhone: '+234 801 234 5601',
+    officeHours: 'Mon–Fri, 8:00 AM – 4:00 PM',
+    expectedProcessingTime: '2–3 working days',
+    requiredDocuments: ['Matriculation number', 'Course registration slip', 'Fee payment receipt'],
+    relatedComplaintCategory: 'administrative_delay'
+  },
+  {
+    id: 'transcript',
+    label: 'Transcript Requests',
+    shortDescription: 'Official transcripts for local or international use',
+    responsibleUnit: 'Registry — Academic Records Division',
+    building: 'Senate Building, 1st Floor',
+    contactEmail: 'transcripts@apex.edu.ng',
+    contactPhone: '+234 801 234 5602',
+    officeHours: 'Mon–Fri, 9:00 AM – 3:00 PM',
+    expectedProcessingTime: '10–15 working days',
+    requiredDocuments: ['Transcript request form', 'Valid ID card', 'Payment evidence', 'Destination address (for dispatch)'],
+    relatedComplaintCategory: 'administrative_delay'
+  },
+  {
+    id: 'hostel',
+    label: 'Hostel & Accommodation',
+    shortDescription: 'Room allocation, maintenance faults, hostel disputes',
+    responsibleUnit: 'Students Affairs — Hostel Management Office',
+    building: 'Student Affairs Complex',
+    contactEmail: 'hostels@apex.edu.ng',
+    contactPhone: '+234 801 234 5603',
+    officeHours: 'Mon–Fri, 8:00 AM – 5:00 PM',
+    expectedProcessingTime: '3–5 working days',
+    requiredDocuments: ['Hostel allocation slip', 'Valid ID card', 'Photo of fault (if maintenance-related)'],
+    relatedComplaintCategory: 'facility_breakdown'
+  },
+  {
+    id: 'fees',
+    label: 'Fees & Payments',
+    shortDescription: 'Payment discrepancies, receipts, refunds, waivers',
+    responsibleUnit: 'Bursary — Student Accounts Unit',
+    building: 'Bursary Building',
+    contactEmail: 'bursary@apex.edu.ng',
+    contactPhone: '+234 801 234 5604',
+    officeHours: 'Mon–Fri, 8:00 AM – 4:00 PM',
+    expectedProcessingTime: '5–7 working days',
+    requiredDocuments: ['Payment receipt / RRR', 'Bank teller (if applicable)', 'Matriculation number'],
+    relatedComplaintCategory: 'administrative_delay'
+  },
+  {
+    id: 'examination',
+    label: 'Examinations & Results',
+    shortDescription: 'Missing scores, result checker errors, exam scheduling',
+    responsibleUnit: 'Exams & Records Unit',
+    building: 'Senate Building, 2nd Floor',
+    contactEmail: 'exams@apex.edu.ng',
+    contactPhone: '+234 801 234 5605',
+    officeHours: 'Mon–Fri, 9:00 AM – 4:00 PM',
+    expectedProcessingTime: '7–10 working days',
+    requiredDocuments: ['Course code(s) affected', 'Exam attendance slip', 'Valid ID card'],
+    relatedComplaintCategory: 'missing_grades'
+  },
+  {
+    id: 'id_card',
+    label: 'Student ID Card',
+    shortDescription: 'New ID card, replacement, or correction of details',
+    responsibleUnit: 'ICT Directorate — Identity Management Desk',
+    building: 'ICT Building, Ground Floor',
+    contactEmail: 'idcard@apex.edu.ng',
+    contactPhone: '+234 801 234 5606',
+    officeHours: 'Mon–Fri, 8:00 AM – 3:00 PM',
+    expectedProcessingTime: '5–10 working days',
+    requiredDocuments: ['Admission letter', 'Payment receipt', 'Passport photograph'],
+    relatedComplaintCategory: 'administrative_delay'
+  },
+  {
+    id: 'academic_issues',
+    label: 'Academic Issues',
+    shortDescription: 'Lecture delivery, supervision, advising, grading disputes',
+    responsibleUnit: 'Office of the Dean of Faculty / Department',
+    building: 'Faculty Administrative Block',
+    contactEmail: 'deanoffice@apex.edu.ng',
+    contactPhone: '+234 801 234 5607',
+    officeHours: 'Mon–Fri, 9:00 AM – 4:00 PM',
+    expectedProcessingTime: '5–7 working days',
+    requiredDocuments: ['Course code', "Lecturer's name", 'Description of the issue'],
+    relatedComplaintCategory: 'lecture_delivery'
+  },
+  {
+    id: 'health_services',
+    label: 'Health Services',
+    shortDescription: 'Clinic access, medical reports, health insurance queries',
+    responsibleUnit: 'University Health Services / Medical Centre',
+    building: 'Medical Centre',
+    contactEmail: 'healthservices@apex.edu.ng',
+    contactPhone: '+234 801 234 5608',
+    officeHours: 'Mon–Sun, 24 hours (Emergency) / Mon–Fri 8AM–6PM (Non-emergency)',
+    expectedProcessingTime: 'Same day for walk-ins; 3–5 days for medical reports',
+    requiredDocuments: ['Valid ID card', 'Health insurance card (if applicable)'],
+    relatedComplaintCategory: 'security_welfare'
+  },
+  {
+    id: 'library',
+    label: 'Library Services',
+    shortDescription: 'Borrowing issues, fines, access to journals/databases',
+    responsibleUnit: 'University Library — Reader Services Desk',
+    building: 'Main Library',
+    contactEmail: 'library@apex.edu.ng',
+    contactPhone: '+234 801 234 5609',
+    officeHours: 'Mon–Sat, 8:00 AM – 8:00 PM',
+    expectedProcessingTime: '1–3 working days',
+    requiredDocuments: ['Library card / Student ID', 'Book/journal reference (if applicable)'],
+    relatedComplaintCategory: 'library_labs'
+  },
+  {
+    id: 'ict',
+    label: 'ICT & Portal Support',
+    shortDescription: 'Student portal access, email accounts, Wi-Fi, e-learning',
+    responsibleUnit: 'ICT Directorate — Helpdesk',
+    building: 'ICT Building, 1st Floor',
+    contactEmail: 'ithelpdesk@apex.edu.ng',
+    contactPhone: '+234 801 234 5610',
+    officeHours: 'Mon–Fri, 8:00 AM – 5:00 PM',
+    expectedProcessingTime: '1–2 working days',
+    requiredDocuments: ['Matriculation number', 'Description of the technical fault'],
+    relatedComplaintCategory: 'administrative_delay'
   }
 ];

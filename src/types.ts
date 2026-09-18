@@ -172,7 +172,33 @@ export interface FacultySummaryStat {
   slaBreachRate: number;
 }
 
-export type MainNavItem = 'dashboard' | 'evaluations' | 'lodge' | 'track' | 'notifications';
+export type MainNavItem = 'dashboard' | 'evaluations' | 'lodge' | 'track' | 'notifications' | 'directory';
+
+export type DirectoryCategoryId =
+  | 'registration'
+  | 'transcript'
+  | 'hostel'
+  | 'fees'
+  | 'examination'
+  | 'id_card'
+  | 'academic_issues'
+  | 'health_services'
+  | 'library'
+  | 'ict';
+
+export interface ServiceDirectoryEntry {
+  id: DirectoryCategoryId;
+  label: string; // e.g. "Transcript Requests"
+  shortDescription: string; // one-liner shown on the selector grid
+  responsibleUnit: string; // e.g. "Registry — Academic Records Division"
+  building: string;
+  contactEmail: string;
+  contactPhone: string;
+  officeHours: string;
+  expectedProcessingTime: string; // e.g. "5–10 working days"
+  requiredDocuments: string[];
+  relatedComplaintCategory: ComplaintCategory; // used to route "File a complaint about this"
+}
 
 export interface AppNotification {
   id: string;

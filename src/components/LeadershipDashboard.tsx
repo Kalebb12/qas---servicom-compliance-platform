@@ -691,7 +691,7 @@ export const LeadershipDashboard: React.FC = () => {
               {charterMetrics.map((m) => {
                 const isOnTrack = m.averageActualDays <= m.charterSlaDays;
                 return (
-                  <div key={m.serviceCode} className="space-y-1">
+                  <div key={m.id} className="space-y-1">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-medium text-[#12332F]">
                         {m.serviceTitle}

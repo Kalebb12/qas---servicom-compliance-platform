@@ -17,8 +17,8 @@ export const BottomTabBar: React.FC = () => {
     complaints
   } = useApp();
 
-  const pendingEvalsCount = courseEvaluations.filter((c) => !c.evaluatedByCurrentStudent).length;
-  const activeComplaintsCount = complaints.filter((c) => c.status !== 'resolved' && c.status !== 'closed').length;
+  const pendingEvalsCount = courseEvaluations.filter(c => !c.evaluatedByCurrentStudent).length;
+  const activeComplaintsCount = complaints.filter(c => c.status !== 'resolved' && c.status !== 'closed').length;
 
   const tabs: {
     id: MainNavItem;
