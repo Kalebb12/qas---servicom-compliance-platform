@@ -13,7 +13,7 @@ import {
   Clock,
   CheckCircle2,
   Search,
-  Filter,
+  Filter, 
   Send,
   ShieldAlert,
   MessageSquare,
@@ -38,7 +38,7 @@ export const ServicomPortal: React.FC = () => {
     charterMetrics,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<"dockets" | "charter">("dockets");
+  const [activeTab, setActiveTab] = useState<'dockets' | 'charter'>('dockets');
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterPriority, setFilterPriority] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
