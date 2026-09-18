@@ -159,13 +159,22 @@ export const StudentPortal: React.FC = () => {
   const [audioRecordingError, setAudioRecordingError] = useState("");
   const recognitionRef = React.useRef<SpeechRecognitionLike | null>(null);
   const confirmedTranscriptRef = React.useRef("");
-
   // Filter complaints belonging to this student or with studentMatric matching
   const myComplaints = complaints.filter(
-    (c) =>
-      c.studentMatric === currentUser.identifier ||
-      (!c.isAnonymous && c.studentName === currentUser.name),
+    c => c.studentMatric === currentUser.identifier || (!c.isAnonymous && c.studentName === currentUser.name)
   );
+
+  // "Top 3 complaints" trend widget: count complaints by category, scoped to
+  // this student's department and separately across the whole university.
+  const countByCategory = (list: typeof complaints) => {
+    const counts: Record<string, number> = {};
+    list.forEach(c => { counts[c.category] = (counts[c.category] || 0) + 1; });
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  };
+  const topComplaintsInDepartment = countByCategory(
+    complaints.filter(c => c.department === currentUser.department)
+  );
+  const topComplaintsUniversityWide = countByCategory(complaints);
 
   const handleOpenEval = (course: CourseEvaluation) => {
     setSelectedCourseForEval(course);
@@ -496,6 +505,71 @@ export const StudentPortal: React.FC = () => {
             <Clock className="w-3.5 h-3.5" />
             <span>Track Complaints ({myComplaints.length})</span>
           </button>
+        </div>
+            </div>
+
+      {/* Top Complaints Trends */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="bg-white rounded-xl border border-[#CBDAD6] p-4">
+          <h4 className="text-xs font-bold text-[#12332F] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <Building className="w-3.5 h-3.5 text-[#2F6E5F]" />
+            Top Complaints — {currentUser.department}
+          </h4>
+          {topComplaintsInDepartment.length === 0 ? (
+            <p className="text-xs text-slate-400">No complaints logged for this department yet.</p>
+          ) : (
+            <div className="space-y-2.5">
+              {topComplaintsInDepartment.map(([category, count], idx) => (
+                <div key={category} className="flex items-center gap-2.5">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                    idx === 0 ? 'bg-[#E7A33E] text-[#12332F]' : idx === 1 ? 'bg-slate-300 text-slate-700' : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    {idx + 1}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between text-xs mb-0.5">
+                      <span className="font-medium text-slate-700 capitalize truncate">{category.replace(/_/g, ' ')}</span>
+                      <span className="text-slate-500 font-mono shrink-0 ml-2">{count}</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#2F6E5F]" style={{ width: `${(count / topComplaintsInDepartment[0][1]) * 100}%` }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="bg-white rounded-xl border border-[#CBDAD6] p-4">
+          <h4 className="text-xs font-bold text-[#12332F] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <GraduationCap className="w-3.5 h-3.5 text-[#E7A33E]" />
+            Top Complaints — UNILAG-Wide
+          </h4>
+          {topComplaintsUniversityWide.length === 0 ? (
+            <p className="text-xs text-slate-400">No complaints logged yet.</p>
+          ) : (
+            <div className="space-y-2.5">
+              {topComplaintsUniversityWide.map(([category, count], idx) => (
+                <div key={category} className="flex items-center gap-2.5">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${
+                    idx === 0 ? 'bg-[#E7A33E] text-[#12332F]' : idx === 1 ? 'bg-slate-300 text-slate-700' : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    {idx + 1}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between text-xs mb-0.5">
+                      <span className="font-medium text-slate-700 capitalize truncate">{category.replace(/_/g, ' ')}</span>
+                      <span className="text-slate-500 font-mono shrink-0 ml-2">{count}</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#E7A33E]" style={{ width: `${(count / topComplaintsUniversityWide[0][1]) * 100}%` }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
