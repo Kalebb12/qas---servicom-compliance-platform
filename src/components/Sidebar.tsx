@@ -114,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenTrackModal, onOpenDirect
     },
     {
       id: 'lodge',
-      label: 'Lodge SERVICOM Grievance',
+      label: 'Lodge SERVICOM Complaint',
       icon: <ShieldAlert className="w-4 h-4 shrink-0" />
     },
     {
