@@ -85,7 +85,7 @@ export const StudentPortal: React.FC = () => {
     activeNav,
     setActiveNav,
     directoryPrefillCategory,
-    setDirectoryPrefillCategory
+    setDirectoryPrefillCategory,
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<
@@ -135,16 +135,22 @@ export const StudentPortal: React.FC = () => {
   const [complaintDept, setComplaintDept] = useState(currentUser.department);
   const [complaintDescription, setComplaintDescription] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [attachmentName, setAttachmentName] = useState('');
-  const [generatedTrackingCode, setGeneratedTrackingCode] = useState<string | null>(null);
+  const [attachmentName, setAttachmentName] = useState("");
+  const [attachmentPreviewUrl, setAttachmentPreviewUrl] = useState<
+    string | null
+  >(null);
+  const [attachmentError, setAttachmentError] = useState("");
+  const [generatedTrackingCode, setGeneratedTrackingCode] = useState<
+    string | null
+  >(null);
 
   // If the student arrived here via "File a complaint about this" from the
   // Service Directory, pre-select the matching category and jump to the form.
   useEffect(() => {
     if (directoryPrefillCategory) {
       setComplaintCategory(directoryPrefillCategory);
-      setActiveTab('lodge');
-      setActiveNav('lodge');
+      setActiveTab("lodge");
+      setActiveNav("lodge");
       setDirectoryPrefillCategory(null);
     }
   }, [directoryPrefillCategory, setActiveNav, setDirectoryPrefillCategory]);
@@ -314,9 +320,56 @@ export const StudentPortal: React.FC = () => {
     setComplaintDescription("");
     setComplaintLocation("");
     setAttachmentName("");
+    setAttachmentPreviewUrl(null);
+    setAttachmentError("");
   };
 
   useEffect(() => () => stopComplaintRecording(), []);
+  useEffect(
+    () => () => {
+      if (attachmentPreviewUrl) URL.revokeObjectURL(attachmentPreviewUrl);
+    },
+    [attachmentPreviewUrl],
+  );
+
+  const handleAttachmentChange = (file: File | undefined) => {
+    setAttachmentError("");
+    if (!file) return;
+
+    const allowedExtensions = [
+      ".png",
+      ".jpg",
+      ".jpeg",
+      ".webp",
+      ".pdf",
+      ".doc",
+      ".docx",
+    ];
+    const fileExtension = `.${file.name.split(".").pop()?.toLowerCase()}`;
+    const isAllowedType =
+      file.type.startsWith("image/") ||
+      [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ].includes(file.type) ||
+      allowedExtensions.includes(fileExtension);
+
+    if (!isAllowedType) {
+      setAttachmentError("Choose an image, PDF, DOC, or DOCX file.");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setAttachmentError("Evidence files must be 10 MB or smaller.");
+      return;
+    }
+
+    setAttachmentName(file.name);
+    setAttachmentPreviewUrl(
+      file.type.startsWith("image/") ? URL.createObjectURL(file) : null,
+    );
+  };
 
   const criteriaLabels: {
     key: keyof StudentEvaluationCriteria;
@@ -650,10 +703,19 @@ export const StudentPortal: React.FC = () => {
                       id: "harassment_victimization",
                       label: "Victimization / Harassment",
                     },
-                    
-                    { id: 'library_labs', label: 'Laboratory / Equipment Fault' },
-                    { id: 'administrative_delay', label: 'Registry / Transcript Delay' },
-                    { id: 'security_welfare', label: 'Security / Health & Welfare' }
+
+                    {
+                      id: "library_labs",
+                      label: "Laboratory / Equipment Fault",
+                    },
+                    {
+                      id: "administrative_delay",
+                      label: "Registry / Transcript Delay",
+                    },
+                    {
+                      id: "security_welfare",
+                      label: "Security / Health & Welfare",
+                    },
                   ].map((cat) => (
                     <button
                       type="button"
@@ -841,28 +903,76 @@ export const StudentPortal: React.FC = () => {
                   )}
               </div>
 
-              {/* Supporting Document simulation */}
+              {/* Supporting evidence */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Optional Attachment / Evidence Note
+                  Attach Evidence{" "}
+                  <span className="font-normal normal-case text-slate-500">
+                    (optional)
+                  </span>
                 </label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="e.g. test_attendance_sheet.pdf or lab_leak_photo.jpg"
-                    value={attachmentName}
-                    onChange={(e) => setAttachmentName(e.target.value)}
-                    className="flex-1 px-3 py-2 text-xs border border-slate-300 rounded-lg bg-slate-50 font-mono"
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setAttachmentName("signed_attendance_copy.pdf")
-                    }
-                    className="px-3 py-2 text-xs bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-slate-700 font-medium cursor-pointer"
-                  >
-                    Simulate Upload
-                  </button>
+                <div className="border border-dashed border-slate-300 rounded-xl bg-slate-50 p-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <label
+                      htmlFor="complaint-evidence"
+                      className="inline-flex items-center gap-2 px-3 py-2 text-xs bg-white hover:bg-slate-100 border border-slate-300 rounded-lg text-slate-700 font-semibold cursor-pointer"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      Choose file
+                    </label>
+                    <input
+                      id="complaint-evidence"
+                      type="file"
+                      accept="image/*,.pdf,.doc,.docx"
+                      onChange={(e) =>
+                        handleAttachmentChange(e.target.files?.[0])
+                      }
+                      className="sr-only"
+                    />
+                    <span className="text-[11px] text-slate-500">
+                      Screenshot, document, image, or PDF · max 10 MB
+                    </span>
+                  </div>
+
+                  {attachmentName && (
+                    <div className="mt-3 flex items-center gap-3 bg-white border border-slate-200 rounded-lg p-2">
+                      {attachmentPreviewUrl ? (
+                        <img
+                          src={attachmentPreviewUrl}
+                          alt="Selected evidence preview"
+                          className="w-12 h-12 rounded object-cover border border-slate-200"
+                        />
+                      ) : (
+                        <FileText className="w-8 h-8 p-1.5 rounded bg-slate-100 text-slate-500" />
+                      )}
+                      <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-700">
+                        {attachmentName}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAttachmentName("");
+                          setAttachmentPreviewUrl(null);
+                        }}
+                        className="text-xs text-slate-500 hover:text-rose-600 cursor-pointer"
+                        aria-label="Remove selected evidence"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+
+                  <p className="mt-2 text-[11px] text-slate-500 flex items-start gap-1.5">
+                    <Lock className="w-3 h-3 mt-0.5 shrink-0 text-emerald-600" />
+                    Choose only evidence needed for this complaint. The file is
+                    previewed in this browser and only its filename is saved
+                    with the local demo docket.
+                  </p>
+                  {attachmentError && (
+                    <p className="mt-2 text-[11px] text-rose-600" role="alert">
+                      {attachmentError}
+                    </p>
+                  )}
                 </div>
               </div>
 
