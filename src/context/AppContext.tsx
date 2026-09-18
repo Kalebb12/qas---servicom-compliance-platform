@@ -187,10 +187,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     week: 10
   };
 
-  // Sync to local storage
+    // Sync to local storage
   useEffect(() => {
     localStorage.setItem('qas_complaints', JSON.stringify(complaints));
   }, [complaints]);
+
+  // Live SLA countdown: every real minute, tick each open complaint's
+  // remaining hours down by 1 minute's worth, and flip isSlaBreached once it
+  // crosses zero. This counts down from whatever value is already stored,
+  // not from the (possibly old) submittedAt date — so it stays meaningful
+  // for both freshly-submitted complaints and seeded demo data.
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setComplaints(prev => prev.map(c => {
+        if (c.status === 'resolved' || c.status === 'closed') return c;
+        const nextRemaining = c.slaHoursRemaining - (1 / 60);
+        return {
+          ...c,
+          slaHoursRemaining: nextRemaining,
+          isSlaBreached: nextRemaining < 0
+        };
+      }));
+    }, 60000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('qas_evaluations', JSON.stringify(courseEvaluations));

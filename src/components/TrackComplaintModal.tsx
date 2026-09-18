@@ -1,17 +1,18 @@
-import * as React from "react";
-import { useState } from "react";
-import { useApp } from "../context/AppContext";
-import {
-  Search,
-  CheckCircle2,
-  Clock,
-  AlertTriangle,
-  ShieldAlert,
-  Star,
-  FileText,
+import React, { useState } from 'react';
+import { useApp } from '../context/AppContext';
+import { ComplaintStatusStepper } from './ComplaintStatusStepper';
+import { formatSlaLabel, getExpectedResponseDate, getLastUpdateLabel } from '../utils/complaintTracking';
+import { 
+  Search, 
+  CheckCircle2, 
+  Clock, 
+  AlertTriangle, 
+  ShieldAlert, 
+  Star, 
+  FileText, 
   X,
-  UserCheck,
-} from "lucide-react";
+  UserCheck
+} from 'lucide-react';
 
 interface TrackComplaintModalProps {
   isOpen: boolean;
@@ -129,24 +130,23 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <span
-                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${foundComplaint.status === "resolved"
-                        ? "bg-emerald-100 text-emerald-800"
-                        : foundComplaint.isSlaBreached
-                          ? "bg-rose-100 text-rose-800"
-                          : "bg-amber-100 text-amber-800"
-                      }`}
-                  >
-                    {foundComplaint.status.replace("_", " ")}
+                                <div className="text-right">
+                  <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${
+                    foundComplaint.status === 'resolved'
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : foundComplaint.isSlaBreached
+                      ? 'bg-rose-100 text-rose-800'
+                      : 'bg-amber-100 text-amber-800'
+                  }`}>
+                    {foundComplaint.status.replace('_', ' ')}
                   </span>
                   <div className="text-[10px] text-slate-500 mt-0.5">
-                    {foundComplaint.isSlaBreached
-                      ? "SLA Breached"
-                      : `SLA: ${foundComplaint.slaHoursRemaining}h remaining`}
+                    {formatSlaLabel(foundComplaint.slaHoursRemaining, foundComplaint.isSlaBreached)}
                   </div>
                 </div>
               </div>
+
+              <ComplaintStatusStepper status={foundComplaint.status} />
 
               <div className="text-slate-700 bg-white p-3 rounded-lg border border-slate-200 text-xs italic">
                 "{foundComplaint.description}"
@@ -162,15 +162,11 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
                 </div>
               )}
 
-              <div className="text-[11px] text-slate-500 space-y-1 pt-1">
-                <div>
-                  <strong>Assigned Unit:</strong>{" "}
-                  {foundComplaint.assignedUnit || "SERVICOM Nodal Desk"}
-                </div>
-                <div>
-                  <strong>Assigned Officer:</strong>{" "}
-                  {foundComplaint.assignedOfficer || "Mrs. Grace Danladi"}
-                </div>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-slate-500 pt-1">
+                <div><strong>Assigned to:</strong> {foundComplaint.assignedUnit || 'SERVICOM Nodal Desk'}</div>
+                <div><strong>Officer:</strong> {foundComplaint.assignedOfficer || 'Mrs. Grace Danladi'}</div>
+                <div><strong>Last update:</strong> {getLastUpdateLabel(foundComplaint)}</div>
+                <div><strong>Expected response:</strong> {getExpectedResponseDate(foundComplaint)}</div>
               </div>
             </div>
           )}
