@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import {
   Search,
@@ -40,8 +41,8 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
 
   const foundComplaint = searchCode.trim()
     ? complaints.find(
-        (c) => c.trackingCode.toLowerCase() === searchCode.trim().toLowerCase(),
-      )
+      (c) => c.trackingCode.toLowerCase() === searchCode.trim().toLowerCase(),
+    )
     : null;
 
   const handleQuickCode = (code: string) => {
@@ -130,13 +131,12 @@ export const TrackComplaintModal: React.FC<TrackComplaintModalProps> = ({
 
                 <div className="text-right">
                   <span
-                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${
-                      foundComplaint.status === "resolved"
+                    className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${foundComplaint.status === "resolved"
                         ? "bg-emerald-100 text-emerald-800"
                         : foundComplaint.isSlaBreached
                           ? "bg-rose-100 text-rose-800"
                           : "bg-amber-100 text-amber-800"
-                    }`}
+                      }`}
                   >
                     {foundComplaint.status.replace("_", " ")}
                   </span>

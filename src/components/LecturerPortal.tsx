@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { 
-  BookOpen, 
-  Award, 
-  TrendingUp, 
-  CheckCircle2, 
-  AlertCircle, 
-  MessageSquare, 
-  Star, 
-  FileCheck, 
-  Send, 
-  Calendar, 
+import {
+  BookOpen,
+  Award,
+  TrendingUp,
+  CheckCircle2,
+  AlertCircle,
+  MessageSquare,
+  Star,
+  FileCheck,
+  Send,
+  Calendar,
   ClipboardList,
   Sparkles,
   Users,
@@ -22,11 +23,11 @@ import {
 } from 'lucide-react';
 
 export const LecturerPortal: React.FC = () => {
-  const { 
-    currentUser, 
-    courseEvaluations, 
-    submitActionPlan, 
-    qaAudits 
+  const {
+    currentUser,
+    courseEvaluations,
+    submitActionPlan,
+    qaAudits
   } = useApp();
 
   // Filter courses taught by Dr. Miriam Adeleke (or all courses if switching view)
@@ -52,7 +53,7 @@ export const LecturerPortal: React.FC = () => {
 
   // Calculate overall metrics
   const totalStudentsEvaluated = activeCourses.reduce((acc, c) => acc + c.totalResponses, 0);
-  const averageOverallScore = activeCourses.length > 0 
+  const averageOverallScore = activeCourses.length > 0
     ? Number((activeCourses.reduce((acc, c) => acc + c.overallScore, 0) / activeCourses.length).toFixed(2))
     : 4.6;
 
@@ -78,9 +79,9 @@ export const LecturerPortal: React.FC = () => {
       <div className="bg-[#12332F] rounded-2xl p-6 sm:p-7 text-[#FBF9F4] shadow-md border border-[#1A433E] relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-4">
-            <img 
-              src={currentUser.avatar} 
-              alt={currentUser.name} 
+            <img
+              src={currentUser.avatar}
+              alt={currentUser.name}
               className="w-16 h-16 rounded-xl object-cover border-2 border-[#E7A33E] shadow-md shrink-0"
             />
             <div>
@@ -187,11 +188,10 @@ export const LecturerPortal: React.FC = () => {
                   setSelectedCourseId(c.id);
                   setActionGoals(c.actionPlan?.improvementGoals || []);
                 }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
-                  selectedCourse?.id === c.id
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${selectedCourse?.id === c.id
                     ? 'bg-[#12332F] text-[#FBF9F4] shadow-xs'
                     : 'bg-[#EFF3F1] text-[#1A2421] hover:bg-[#E2EBE8]'
-                }`}
+                  }`}
               >
                 {c.courseCode} ({c.overallScore} ★)
               </button>
@@ -245,7 +245,7 @@ export const LecturerPortal: React.FC = () => {
                       <span className="font-semibold text-[#1A2421]">{item.val} / 5.0</span>
                     </div>
                     <div className="w-full bg-[#EFF3F1] rounded-full h-2.5 overflow-hidden flex border border-[#CBDAD6]/50">
-                      <div 
+                      <div
                         className="bg-[#2F6E5F] h-full rounded-full transition-all duration-500"
                         style={{ width: `${(item.val / 5) * 100}%` }}
                       />
@@ -272,26 +272,24 @@ export const LecturerPortal: React.FC = () => {
 
                 <div className="space-y-2.5">
                   {selectedCourse.comments.map((comm) => (
-                    <div 
+                    <div
                       key={comm.id}
-                      className={`p-3.5 rounded-xl border text-xs space-y-1.5 ${
-                        comm.sentiment === 'positive'
+                      className={`p-3.5 rounded-xl border text-xs space-y-1.5 ${comm.sentiment === 'positive'
                           ? 'bg-[#2F6E5F]/5 border-[#2F6E5F]/30'
                           : comm.sentiment === 'constructive'
-                          ? 'bg-[#E7A33E]/10 border-[#E7A33E]/30'
-                          : 'bg-[#EFF3F1] border-[#CBDAD6]'
-                      }`}
+                            ? 'bg-[#E7A33E]/10 border-[#E7A33E]/30'
+                            : 'bg-[#EFF3F1] border-[#CBDAD6]'
+                        }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1">
                           {[...Array(comm.rating)].map((_, i) => (
                             <Star key={i} className="w-3 h-3 fill-[#E7A33E] text-[#E7A33E]" />
                           ))}
-                          <span className={`ml-1 text-[10px] font-semibold uppercase px-1.5 py-0.2 rounded ${
-                            comm.sentiment === 'positive' 
-                              ? 'bg-[#2F6E5F]/15 text-[#2F6E5F]' 
+                          <span className={`ml-1 text-[10px] font-semibold uppercase px-1.5 py-0.2 rounded ${comm.sentiment === 'positive'
+                              ? 'bg-[#2F6E5F]/15 text-[#2F6E5F]'
                               : 'bg-[#E7A33E]/20 text-[#8F5A0E]'
-                          }`}>
+                            }`}>
                             {comm.sentiment === 'constructive' ? 'Area to strengthen' : 'Commended'}
                           </span>
                         </div>
@@ -323,7 +321,7 @@ export const LecturerPortal: React.FC = () => {
                   <label className="text-xs font-medium text-[#1A2421] block">
                     Actionable Growth Objectives:
                   </label>
-                  
+
                   {actionGoals.map((goal, idx) => (
                     <div key={idx} className="flex items-start gap-2 bg-white p-2.5 rounded-lg border border-[#CBDAD6] text-xs">
                       <CheckCircle2 className="w-4 h-4 text-[#2F6E5F] shrink-0 mt-0.5" />
