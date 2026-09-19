@@ -19,7 +19,8 @@ export type ComplaintCategory =
   | 'harassment_victimization'
   | 'administrative_delay'
   | 'library_labs'
-  | 'security_welfare';
+  | 'security_welfare'
+  | 'other';
 
 export type ComplaintPriority = 'standard' | 'high' | 'urgent';
 

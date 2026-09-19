@@ -11,6 +11,7 @@ import {
   ExternalLink,
   ChevronDown,
   Compass,
+  Settings,
 } from "lucide-react";
 
 interface TopBarProps {
@@ -31,6 +32,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     resetAllData,
     currentUser,
     role,
+    setIsSettingsOpen,
   } = useApp();
 
   const [alertExpanded, setAlertExpanded] = useState(false);
@@ -55,7 +57,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header className="bg-[#12332F] border-b border-[#1A433E] sticky top-0 z-30 text-[#FBF9F4] h-12 flex items-center px-3 sm:px-5">
+    <header className="qas-topbar bg-[#12332F] border-b border-[#1A433E] sticky top-0 z-30 text-[#FBF9F4] h-12 flex items-center px-3 sm:px-5">
       <div className="w-full flex items-center justify-between gap-2">
         {/* Left Side: Mobile Hamburger + Institution Name & Week */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -138,6 +140,15 @@ export const TopBar: React.FC<TopBarProps> = ({
             aria-label="Open service directory"
           >
             <Compass className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="p-1.5 rounded-lg text-[#EFF3F1]/70 hover:text-[#E7A33E] hover:bg-[#1A433E] transition-colors cursor-pointer"
+            title="Accessibility and display settings"
+            aria-label="Open accessibility and display settings"
+          >
+            <Settings className="w-4 h-4" />
           </button>
 
           {/* Compact Escalation/Alert Icon-Badge (Expands on Tap) */}

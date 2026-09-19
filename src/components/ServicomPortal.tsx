@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApp } from "../context/AppContext";
 import {
   Complaint,
@@ -13,7 +13,7 @@ import {
   Clock,
   CheckCircle2,
   Search,
-  Filter, 
+  Filter,
   Send,
   ShieldAlert,
   MessageSquare,
@@ -36,9 +36,12 @@ export const ServicomPortal: React.FC = () => {
     updateComplaintStatus,
     addComplaintInvestigationNote,
     charterMetrics,
+    activeNav,
   } = useApp();
 
-    const [activeTab, setActiveTab] = useState<'myactions' | 'dockets' | 'charter'>('myactions');
+  const [activeTab, setActiveTab] = useState<
+    "myactions" | "dockets" | "charter"
+  >("myactions");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterPriority, setFilterPriority] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,6 +54,12 @@ export const ServicomPortal: React.FC = () => {
   const [newResolutionSummary, setNewResolutionSummary] = useState("");
   const [newInvestigationNote, setNewInvestigationNote] = useState("");
   const [isInternalNote, setIsInternalNote] = useState(false);
+
+  useEffect(() => {
+    if (activeNav === "evaluations") setActiveTab("myactions");
+    if (activeNav === "lodge") setActiveTab("dockets");
+    if (activeNav === "track") setActiveTab("charter");
+  }, [activeNav]);
 
   const openComplaintDossier = (complaint: Complaint) => {
     setSelectedComplaint(complaint);
@@ -70,10 +79,10 @@ export const ServicomPortal: React.FC = () => {
     setSelectedComplaint((prev) =>
       prev
         ? {
-          ...prev,
-          status: newStatus,
-          resolutionSummary: newResolutionSummary,
-        }
+            ...prev,
+            status: newStatus,
+            resolutionSummary: newResolutionSummary,
+          }
         : null,
     );
   };
@@ -100,9 +109,9 @@ export const ServicomPortal: React.FC = () => {
     setSelectedComplaint((prev) =>
       prev
         ? {
-          ...prev,
-          investigationNotes: [...prev.investigationNotes, newNoteObj],
-        }
+            ...prev,
+            investigationNotes: [...prev.investigationNotes, newNoteObj],
+          }
         : null,
     );
 
@@ -136,20 +145,31 @@ export const ServicomPortal: React.FC = () => {
   });
 
   const totalCount = complaints.length;
-  const activeCount = complaints.filter(c => c.status !== 'resolved' && c.status !== 'closed').length;
-  const breachedCount = complaints.filter(c => c.isSlaBreached && c.status !== 'resolved' && c.status !== 'closed').length;
-  const resolvedCount = complaints.filter(c => c.status === 'resolved' || c.status === 'closed').length;
+  const activeCount = complaints.filter(
+    (c) => c.status !== "resolved" && c.status !== "closed",
+  ).length;
+  const breachedCount = complaints.filter(
+    (c) => c.isSlaBreached && c.status !== "resolved" && c.status !== "closed",
+  ).length;
+  const resolvedCount = complaints.filter(
+    (c) => c.status === "resolved" || c.status === "closed",
+  ).length;
 
   // "My Actions" buckets: overdue (SLA already breached), due this week
   // (SLA target within 7 days / 168 hours), and recently completed.
-  const isOpenCase = (c: Complaint) => c.status !== 'resolved' && c.status !== 'closed';
+  const isOpenCase = (c: Complaint) =>
+    c.status !== "resolved" && c.status !== "closed";
   const myOverdueItems = complaints
-    .filter(c => isOpenCase(c) && c.isSlaBreached)
+    .filter((c) => isOpenCase(c) && c.isSlaBreached)
     .sort((a, b) => a.slaHoursRemaining - b.slaHoursRemaining);
   const myDueThisWeekItems = complaints
-    .filter(c => isOpenCase(c) && !c.isSlaBreached && c.slaHoursRemaining <= 168)
+    .filter(
+      (c) => isOpenCase(c) && !c.isSlaBreached && c.slaHoursRemaining <= 168,
+    )
     .sort((a, b) => a.slaHoursRemaining - b.slaHoursRemaining);
-  const myCompletedItems = complaints.filter(c => c.status === 'resolved' || c.status === 'closed');
+  const myCompletedItems = complaints.filter(
+    (c) => c.status === "resolved" || c.status === "closed",
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 font-sans text-[#1A2421]">
@@ -203,23 +223,26 @@ export const ServicomPortal: React.FC = () => {
         {/* Tabs */}
         <div className="flex border-b border-[#1A433E] mt-6 gap-2 text-sm overflow-x-auto">
           <button
-            onClick={() => setActiveTab('myactions')}
+            onClick={() => setActiveTab("myactions")}
             className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${
-              activeTab === 'myactions'
-                ? 'border-[#E7A33E] text-[#E7A33E]'
-                : 'border-transparent text-[#EFF3F1]/70 hover:text-white'
+              activeTab === "myactions"
+                ? "border-[#E7A33E] text-[#E7A33E]"
+                : "border-transparent text-[#EFF3F1]/70 hover:text-white"
             }`}
           >
             <UserCheck className="w-4 h-4" />
-            <span>My Actions ({myOverdueItems.length + myDueThisWeekItems.length})</span>
+            <span>
+              My Actions ({myOverdueItems.length + myDueThisWeekItems.length})
+            </span>
           </button>
 
           <button
-            onClick={() => setActiveTab('dockets')}
-            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${activeTab === "dockets"
+            onClick={() => setActiveTab("dockets")}
+            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${
+              activeTab === "dockets"
                 ? "border-[#E7A33E] text-[#E7A33E]"
                 : "border-transparent text-[#EFF3F1]/70 hover:text-white"
-              }`}
+            }`}
           >
             <Flame className="w-4 h-4" />
             <span>Complaints & Triage ({complaints.length})</span>
@@ -227,10 +250,11 @@ export const ServicomPortal: React.FC = () => {
 
           <button
             onClick={() => setActiveTab("charter")}
-            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${activeTab === "charter"
+            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${
+              activeTab === "charter"
                 ? "border-[#E7A33E] text-[#E7A33E]"
                 : "border-transparent text-[#EFF3F1]/70 hover:text-white"
-              }`}
+            }`}
           >
             <Scale className="w-4 h-4" />
             <span>Institutional Service Charter Metrics</span>
@@ -238,27 +262,33 @@ export const ServicomPortal: React.FC = () => {
         </div>
       </div>
 
-              {/* Tab 0: My Actions (Officer Action Centre) */}
-      {activeTab === 'myactions' && (
+      {/* Tab 0: My Actions (Officer Action Centre) */}
+      {activeTab === "myactions" && (
         <div className="space-y-4">
           {/* Bucket summary */}
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-white rounded-xl border border-rose-200 p-4 text-center">
-              <div className="text-2xl font-bold text-rose-600">{myOverdueItems.length}</div>
+              <div className="text-2xl font-bold text-rose-600">
+                {myOverdueItems.length}
+              </div>
               <div className="text-[11px] uppercase tracking-wider font-semibold text-rose-700 flex items-center justify-center gap-1 mt-1">
                 <span className="w-2 h-2 rounded-full bg-rose-500" />
                 Overdue
               </div>
             </div>
             <div className="bg-white rounded-xl border border-amber-200 p-4 text-center">
-              <div className="text-2xl font-bold text-amber-600">{myDueThisWeekItems.length}</div>
+              <div className="text-2xl font-bold text-amber-600">
+                {myDueThisWeekItems.length}
+              </div>
               <div className="text-[11px] uppercase tracking-wider font-semibold text-amber-700 flex items-center justify-center gap-1 mt-1">
                 <span className="w-2 h-2 rounded-full bg-amber-500" />
                 Due This Week
               </div>
             </div>
             <div className="bg-white rounded-xl border border-emerald-200 p-4 text-center">
-              <div className="text-2xl font-bold text-emerald-600">{myCompletedItems.length}</div>
+              <div className="text-2xl font-bold text-emerald-600">
+                {myCompletedItems.length}
+              </div>
               <div className="text-[11px] uppercase tracking-wider font-semibold text-emerald-700 flex items-center justify-center gap-1 mt-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 Completed
@@ -283,15 +313,22 @@ export const ServicomPortal: React.FC = () => {
                       <span className="font-mono text-[11px] font-bold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
                         {item.trackingCode}
                       </span>
-                      <span className="text-xs text-slate-500 capitalize">{item.category.replace('_', ' ')}</span>
+                      <span className="text-xs text-slate-500 capitalize">
+                        {item.category.replace("_", " ")}
+                      </span>
                     </div>
-                    <div className="font-semibold text-slate-900 text-sm truncate">{item.title}</div>
+                    <div className="font-semibold text-slate-900 text-sm truncate">
+                      {item.title}
+                    </div>
                     <div className="text-[11px] text-rose-600 font-bold mt-0.5">
                       Overdue by {Math.abs(item.slaHoursRemaining)}h
                     </div>
                   </div>
                   <button
-                    onClick={() => { openComplaintDossier(item); setActiveTab('dockets'); }}
+                    onClick={() => {
+                      openComplaintDossier(item);
+                      setActiveTab("dockets");
+                    }}
                     className="shrink-0 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
                   >
                     Review
@@ -318,15 +355,22 @@ export const ServicomPortal: React.FC = () => {
                       <span className="font-mono text-[11px] font-bold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
                         {item.trackingCode}
                       </span>
-                      <span className="text-xs text-slate-500 capitalize">{item.category.replace('_', ' ')}</span>
+                      <span className="text-xs text-slate-500 capitalize">
+                        {item.category.replace("_", " ")}
+                      </span>
                     </div>
-                    <div className="font-semibold text-slate-900 text-sm truncate">{item.title}</div>
+                    <div className="font-semibold text-slate-900 text-sm truncate">
+                      {item.title}
+                    </div>
                     <div className="text-[11px] text-amber-700 font-medium mt-0.5">
                       Due in {item.slaHoursRemaining}h
                     </div>
                   </div>
                   <button
-                    onClick={() => { openComplaintDossier(item); setActiveTab('dockets'); }}
+                    onClick={() => {
+                      openComplaintDossier(item);
+                      setActiveTab("dockets");
+                    }}
                     className="shrink-0 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
                   >
                     Review
@@ -358,10 +402,15 @@ export const ServicomPortal: React.FC = () => {
                     <span className="font-mono text-[11px] font-bold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 mr-2">
                       {item.trackingCode}
                     </span>
-                    <span className="text-sm text-slate-700 truncate">{item.title}</span>
+                    <span className="text-sm text-slate-700 truncate">
+                      {item.title}
+                    </span>
                   </div>
                   <button
-                    onClick={() => { openComplaintDossier(item); setActiveTab('dockets'); }}
+                    onClick={() => {
+                      openComplaintDossier(item);
+                      setActiveTab("dockets");
+                    }}
                     className="shrink-0 px-3 py-1.5 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 rounded-lg text-xs font-semibold cursor-pointer"
                   >
                     View
@@ -374,7 +423,7 @@ export const ServicomPortal: React.FC = () => {
       )}
 
       {/* Tab 1: Dockets & Triage */}
-      {activeTab === 'dockets' && (
+      {activeTab === "dockets" && (
         <div className="space-y-4">
           {/* Filter and Search controls */}
           <div className="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 shadow-xs">
@@ -433,12 +482,13 @@ export const ServicomPortal: React.FC = () => {
               return (
                 <div
                   key={item.id}
-                  className={`bg-white rounded-xl border p-5 shadow-xs transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${isOverdue
+                  className={`bg-white rounded-xl border p-5 shadow-xs transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+                    isOverdue
                       ? "border-rose-300 ring-1 ring-rose-300"
                       : isUrgent
                         ? "border-amber-300"
                         : "border-slate-200 hover:border-slate-300"
-                    }`}
+                  }`}
                 >
                   <div className="space-y-2 flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
@@ -446,12 +496,13 @@ export const ServicomPortal: React.FC = () => {
                         {item.trackingCode}
                       </span>
                       <span
-                        className={`text-[11px] font-bold uppercase px-2 py-0.5 rounded ${item.priority === "urgent"
+                        className={`text-[11px] font-bold uppercase px-2 py-0.5 rounded ${
+                          item.priority === "urgent"
                             ? "bg-rose-100 text-rose-800 border border-rose-200"
                             : item.priority === "high"
                               ? "bg-amber-100 text-amber-800 border border-amber-200"
                               : "bg-blue-100 text-blue-800 border border-blue-200"
-                          }`}
+                        }`}
                       >
                         {item.priority}
                       </span>
@@ -494,14 +545,15 @@ export const ServicomPortal: React.FC = () => {
                   <div className="flex md:flex-col items-end justify-between gap-3 shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
                     <div className="text-left md:text-right">
                       <span
-                        className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full uppercase ${item.status === "resolved"
+                        className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full uppercase ${
+                          item.status === "resolved"
                             ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
                             : item.status === "escalated"
                               ? "bg-purple-100 text-purple-800 border border-purple-300"
                               : isOverdue
                                 ? "bg-rose-100 text-rose-800 border border-rose-300"
                                 : "bg-amber-100 text-amber-800 border border-amber-300"
-                          }`}
+                        }`}
                       >
                         {item.status.replace("_", " ")}
                       </span>
@@ -576,12 +628,13 @@ export const ServicomPortal: React.FC = () => {
 
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-xs font-bold px-2.5 py-0.5 rounded uppercase ${metric.status === "compliant"
+                      className={`text-xs font-bold px-2.5 py-0.5 rounded uppercase ${
+                        metric.status === "compliant"
                           ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
                           : metric.status === "warning"
                             ? "bg-amber-100 text-amber-800 border border-amber-300"
                             : "bg-rose-100 text-rose-800 border border-rose-300"
-                        }`}
+                      }`}
                     >
                       {metric.status}
                     </span>
@@ -621,11 +674,12 @@ export const ServicomPortal: React.FC = () => {
                       Actual Compliance Rate:
                     </span>
                     <strong
-                      className={`font-mono text-sm ${metric.currentCompliancePercent >=
-                          metric.targetCompliancePercent
+                      className={`font-mono text-sm ${
+                        metric.currentCompliancePercent >=
+                        metric.targetCompliancePercent
                           ? "text-emerald-700 font-bold"
                           : "text-rose-600 font-bold"
-                        }`}
+                      }`}
                     >
                       {metric.currentCompliancePercent}%
                     </strong>
@@ -635,13 +689,14 @@ export const ServicomPortal: React.FC = () => {
                 {/* Progress bar */}
                 <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                   <div
-                    className={`h-full rounded-full ${metric.currentCompliancePercent >=
-                        metric.targetCompliancePercent
+                    className={`h-full rounded-full ${
+                      metric.currentCompliancePercent >=
+                      metric.targetCompliancePercent
                         ? "bg-emerald-600"
                         : metric.status === "warning"
                           ? "bg-amber-500"
                           : "bg-rose-600"
-                      }`}
+                    }`}
                     style={{
                       width: `${Math.min(100, metric.currentCompliancePercent)}%`,
                     }}
@@ -835,10 +890,11 @@ export const ServicomPortal: React.FC = () => {
                   {selectedComplaint.investigationNotes.map((note) => (
                     <div
                       key={note.id}
-                      className={`p-3 rounded-xl border text-xs space-y-1 ${note.isInternalOnly
+                      className={`p-3 rounded-xl border text-xs space-y-1 ${
+                        note.isInternalOnly
                           ? "bg-amber-50/70 border-amber-200"
                           : "bg-slate-50 border-slate-200"
-                        }`}
+                      }`}
                     >
                       <div className="flex items-center justify-between text-slate-500 text-[11px]">
                         <span className="font-semibold text-slate-800">

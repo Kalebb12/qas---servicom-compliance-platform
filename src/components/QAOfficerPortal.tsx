@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { useState } from 'react';
-import { useApp } from '../context/AppContext';
-import { QAAuditInspection, QAChecklist } from '../types';
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { useApp } from "../context/AppContext";
+import { QAAuditInspection, QAChecklist } from "../types";
 import {
   ClipboardCheck,
   CheckCircle2,
@@ -18,66 +18,78 @@ import {
   Building2,
   Sparkles,
   Sliders,
-  Calendar
-} from 'lucide-react';
+  Calendar,
+} from "lucide-react";
 
 export const QAOfficerPortal: React.FC = () => {
-  const { currentUser, qaAudits, recordNewAudit } = useApp();
+  const { currentUser, qaAudits, recordNewAudit, activeNav } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'checklist' | 'registry'>('checklist');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<"checklist" | "registry">(
+    "checklist",
+  );
+
+  useEffect(() => {
+    if (activeNav === "track") setActiveTab("registry");
+    if (activeNav === "evaluations" || activeNav === "lodge")
+      setActiveTab("checklist");
+  }, [activeNav]);
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // New Audit Form State
-  const [hallName, setHallName] = useState('Lecture Theatre B (LT-B)');
-  const [building, setBuilding] = useState('Faculty of Engineering Complex');
-  const [faculty, setFaculty] = useState('Engineering & Technology');
-  const [courseCode, setCourseCode] = useState('MEE 305');
-  const [courseTitle, setCourseTitle] = useState('Fluid Mechanics & Hydraulics');
-  const [scheduledLecturer, setScheduledLecturer] = useState('Engr. Dr. S. O. Aremu');
-  const [actualLecturer, setActualLecturer] = useState('Engr. Dr. S. O. Aremu');
-  const [timeSlot, setTimeSlot] = useState('10:00 AM - 12:00 PM');
+  const [hallName, setHallName] = useState("Lecture Theatre B (LT-B)");
+  const [building, setBuilding] = useState("Faculty of Engineering Complex");
+  const [faculty, setFaculty] = useState("Engineering & Technology");
+  const [courseCode, setCourseCode] = useState("MEE 305");
+  const [courseTitle, setCourseTitle] = useState(
+    "Fluid Mechanics & Hydraulics",
+  );
+  const [scheduledLecturer, setScheduledLecturer] = useState(
+    "Engr. Dr. S. O. Aremu",
+  );
+  const [actualLecturer, setActualLecturer] = useState("Engr. Dr. S. O. Aremu");
+  const [timeSlot, setTimeSlot] = useState("10:00 AM - 12:00 PM");
   const [hallCapacity, setHallCapacity] = useState(150);
   const [studentHeadcount, setStudentHeadcount] = useState(128);
-  const [inspectorRemarks, setInspectorRemarks] = useState('');
-  const [rectificationDeadline, setRectificationDeadline] = useState('');
+  const [inspectorRemarks, setInspectorRemarks] = useState("");
+  const [rectificationDeadline, setRectificationDeadline] = useState("");
 
   // Checklist criteria
   const [checklist, setChecklist] = useState<QAChecklist>({
-    lecturerPunctuality: 'punctual',
-    hallCleanliness: 'compliant',
-    seatingAdequacy: 'sufficient',
-    audiovisualStatus: 'functional',
-    ventilationAndLighting: 'adequate',
+    lecturerPunctuality: "punctual",
+    hallCleanliness: "compliant",
+    seatingAdequacy: "sufficient",
+    audiovisualStatus: "functional",
+    ventilationAndLighting: "adequate",
     syllabusAvailableToStudents: true,
     continuousAssessmentAnnounced: true,
     studentHeadcount: 128,
-    hallCapacity: 150
+    hallCapacity: 150,
   });
 
   // Calculate live readiness score
   const calculateScore = () => {
     let score = 0;
     // Lecturer punctuality (25%)
-    if (checklist.lecturerPunctuality === 'punctual') score += 25;
-    else if (checklist.lecturerPunctuality === 'late_10m') score += 12;
-    else if (checklist.lecturerPunctuality === 'absent') score += 0;
+    if (checklist.lecturerPunctuality === "punctual") score += 25;
+    else if (checklist.lecturerPunctuality === "late_10m") score += 12;
+    else if (checklist.lecturerPunctuality === "absent") score += 0;
 
     // Hall Cleanliness (15%)
-    if (checklist.hallCleanliness === 'compliant') score += 15;
-    else if (checklist.hallCleanliness === 'minor_litter') score += 8;
+    if (checklist.hallCleanliness === "compliant") score += 15;
+    else if (checklist.hallCleanliness === "minor_litter") score += 8;
 
     // Seating adequacy (15%)
-    if (checklist.seatingAdequacy === 'sufficient') score += 15;
-    else if (checklist.seatingAdequacy === 'overcrowded') score += 7;
+    if (checklist.seatingAdequacy === "sufficient") score += 15;
+    else if (checklist.seatingAdequacy === "overcrowded") score += 7;
 
     // Audiovisual (15%)
-    if (checklist.audiovisualStatus === 'functional') score += 15;
-    else if (checklist.audiovisualStatus === 'intermittent') score += 8;
+    if (checklist.audiovisualStatus === "functional") score += 15;
+    else if (checklist.audiovisualStatus === "intermittent") score += 8;
 
     // Ventilation & Lighting (10%)
-    if (checklist.ventilationAndLighting === 'adequate') score += 10;
-    else if (checklist.ventilationAndLighting === 'fair') score += 5;
+    if (checklist.ventilationAndLighting === "adequate") score += 10;
+    else if (checklist.ventilationAndLighting === "fair") score += 5;
 
     // Syllabus & CA (20%)
     if (checklist.syllabusAvailableToStudents) score += 10;
@@ -87,8 +99,12 @@ export const QAOfficerPortal: React.FC = () => {
   };
 
   const currentScore = calculateScore();
-  const calculatedStatus: 'passed' | 'conditional_pass' | 'non_compliant' =
-    currentScore >= 80 ? 'passed' : currentScore >= 55 ? 'conditional_pass' : 'non_compliant';
+  const calculatedStatus: "passed" | "conditional_pass" | "non_compliant" =
+    currentScore >= 80
+      ? "passed"
+      : currentScore >= 55
+        ? "conditional_pass"
+        : "non_compliant";
 
   const handleSubmitAudit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,23 +121,28 @@ export const QAOfficerPortal: React.FC = () => {
       checklist: {
         ...checklist,
         studentHeadcount,
-        hallCapacity
+        hallCapacity,
       },
       overallScorePercentage: currentScore,
       status: calculatedStatus,
       inspectorName: currentUser.name,
-      inspectorRemarks: inspectorRemarks || 'Physical QA audit completed during regular lecture hours.',
-      rectificationDeadline: calculatedStatus !== 'passed' ? rectificationDeadline || '2025-03-01' : undefined
+      inspectorRemarks:
+        inspectorRemarks ||
+        "Physical QA audit completed during regular lecture hours.",
+      rectificationDeadline:
+        calculatedStatus !== "passed"
+          ? rectificationDeadline || "2025-03-01"
+          : undefined,
     });
 
     // Reset remarks and switch to registry
-    setInspectorRemarks('');
-    setActiveTab('registry');
+    setInspectorRemarks("");
+    setActiveTab("registry");
   };
 
   // Filtered audits
-  const filteredAudits = qaAudits.filter(a => {
-    const matchesStatus = filterStatus === 'all' || a.status === filterStatus;
+  const filteredAudits = qaAudits.filter((a) => {
+    const matchesStatus = filterStatus === "all" || a.status === filterStatus;
     const matchesSearch =
       a.hallName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       a.courseCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -130,10 +151,16 @@ export const QAOfficerPortal: React.FC = () => {
     return matchesStatus && matchesSearch;
   });
 
-  const passCount = qaAudits.filter(a => a.status === 'passed').length;
-  const conditionalCount = qaAudits.filter(a => a.status === 'conditional_pass').length;
-  const nonCompliantCount = qaAudits.filter(a => a.status === 'non_compliant').length;
-  const averagePassRate = Math.round((passCount / (qaAudits.length || 1)) * 100);
+  const passCount = qaAudits.filter((a) => a.status === "passed").length;
+  const conditionalCount = qaAudits.filter(
+    (a) => a.status === "conditional_pass",
+  ).length;
+  const nonCompliantCount = qaAudits.filter(
+    (a) => a.status === "non_compliant",
+  ).length;
+  const averagePassRate = Math.round(
+    (passCount / (qaAudits.length || 1)) * 100,
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 font-sans text-[#1A2421]">
@@ -149,19 +176,28 @@ export const QAOfficerPortal: React.FC = () => {
               Digital Inspection & Compliance Console
             </h2>
             <p className="text-xs sm:text-sm text-[#EFF3F1]/80 mt-0.5">
-              Auditor: {currentUser.name} • On-Site Classroom Spot-Checks, Accreditation Readiness & Facility Audits
+              Auditor: {currentUser.name} • On-Site Classroom Spot-Checks,
+              Accreditation Readiness & Facility Audits
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <div className="bg-[#1A433E] border border-[#275B52] rounded-xl px-4 py-3 text-center">
-              <div className="font-sans text-2xl font-medium text-[#FBF9F4]">{qaAudits.length}</div>
-              <div className="text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">Audits Recorded</div>
+              <div className="font-sans text-2xl font-medium text-[#FBF9F4]">
+                {qaAudits.length}
+              </div>
+              <div className="text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">
+                Audits Recorded
+              </div>
             </div>
 
             <div className="bg-[#1A433E] border border-[#275B52] rounded-xl px-4 py-3 text-center">
-              <div className="font-sans text-2xl font-medium text-[#2F6E5F]">{averagePassRate}%</div>
-              <div className="text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">Compliance Rate</div>
+              <div className="font-sans text-2xl font-medium text-[#2F6E5F]">
+                {averagePassRate}%
+              </div>
+              <div className="text-[11px] text-[#EFF3F1]/70 uppercase tracking-wider font-medium">
+                Compliance Rate
+              </div>
             </div>
           </div>
         </div>
@@ -169,22 +205,24 @@ export const QAOfficerPortal: React.FC = () => {
         {/* Tabs */}
         <div className="flex border-b border-[#1A433E] mt-6 gap-2 text-sm overflow-x-auto">
           <button
-            onClick={() => setActiveTab('checklist')}
-            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${activeTab === 'checklist'
-                ? 'border-[#E7A33E] text-[#E7A33E]'
-                : 'border-transparent text-[#EFF3F1]/70 hover:text-white'
-              }`}
+            onClick={() => setActiveTab("checklist")}
+            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${
+              activeTab === "checklist"
+                ? "border-[#E7A33E] text-[#E7A33E]"
+                : "border-transparent text-[#EFF3F1]/70 hover:text-white"
+            }`}
           >
             <Plus className="w-4 h-4" />
             <span>Run Digital Audit Checklist</span>
           </button>
 
           <button
-            onClick={() => setActiveTab('registry')}
-            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${activeTab === 'registry'
-                ? 'border-[#E7A33E] text-[#E7A33E]'
-                : 'border-transparent text-[#EFF3F1]/70 hover:text-white'
-              }`}
+            onClick={() => setActiveTab("registry")}
+            className={`flex items-center gap-2 pb-3 px-3 font-medium transition-colors border-b-2 cursor-pointer whitespace-nowrap text-xs sm:text-sm ${
+              activeTab === "registry"
+                ? "border-[#E7A33E] text-[#E7A33E]"
+                : "border-transparent text-[#EFF3F1]/70 hover:text-white"
+            }`}
           >
             <FileText className="w-4 h-4" />
             <span>Campus Audit Registry ({qaAudits.length})</span>
@@ -193,26 +231,33 @@ export const QAOfficerPortal: React.FC = () => {
       </div>
 
       {/* Tab 1: Digital Audit Checklist Runner */}
-      {activeTab === 'checklist' && (
+      {activeTab === "checklist" && (
         <form onSubmit={handleSubmitAudit} className="space-y-6">
           <div className="bg-white rounded-2xl border border-[#CBDAD6] p-6 shadow-xs space-y-6">
             {/* Live Score Floating Ribbon */}
             <div className="bg-[#12332F] text-[#FBF9F4] rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 border border-[#1A433E]">
               <div className="flex items-center gap-3">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-medium text-lg ${calculatedStatus === 'passed'
-                    ? 'bg-[#2F6E5F] text-[#FBF9F4]'
-                    : calculatedStatus === 'conditional_pass'
-                      ? 'bg-[#E7A33E] text-[#12332F]'
-                      : 'bg-[#B93826] text-white'
-                  }`}>
+                <div
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center font-medium text-lg ${
+                    calculatedStatus === "passed"
+                      ? "bg-[#2F6E5F] text-[#FBF9F4]"
+                      : calculatedStatus === "conditional_pass"
+                        ? "bg-[#E7A33E] text-[#12332F]"
+                        : "bg-[#B93826] text-white"
+                  }`}
+                >
                   {currentScore}%
                 </div>
                 <div>
-                  <span className="text-xs text-[#EFF3F1]/70 uppercase tracking-wider block">Live Audit Outcome</span>
+                  <span className="text-xs text-[#EFF3F1]/70 uppercase tracking-wider block">
+                    Live Audit Outcome
+                  </span>
                   <span className="font-serif font-semibold text-sm sm:text-base text-[#FBF9F4]">
-                    {calculatedStatus === 'passed' && 'COMPLIANT / PASSED'}
-                    {calculatedStatus === 'conditional_pass' && 'CONDITIONAL PASS (Rectification Requested)'}
-                    {calculatedStatus === 'non_compliant' && 'CRITICAL ESCALATION (Flagged for Immediate Attention)'}
+                    {calculatedStatus === "passed" && "COMPLIANT / PASSED"}
+                    {calculatedStatus === "conditional_pass" &&
+                      "CONDITIONAL PASS (Rectification Requested)"}
+                    {calculatedStatus === "non_compliant" &&
+                      "CRITICAL ESCALATION (Flagged for Immediate Attention)"}
                   </span>
                 </div>
               </div>
@@ -231,7 +276,9 @@ export const QAOfficerPortal: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Hall / Venue Name *</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Hall / Venue Name *
+                  </label>
                   <input
                     type="text"
                     required
@@ -242,7 +289,9 @@ export const QAOfficerPortal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Building / Complex</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Building / Complex
+                  </label>
                   <input
                     type="text"
                     value={building}
@@ -252,24 +301,38 @@ export const QAOfficerPortal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Faculty</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Faculty
+                  </label>
                   <select
                     value={faculty}
                     onChange={(e) => setFaculty(e.target.value)}
                     className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white"
                   >
-                    <option value="Physical & Computing Sciences">Physical & Computing Sciences</option>
-                    <option value="Engineering & Technology">Engineering & Technology</option>
-                    <option value="Management & Social Sciences">Management & Social Sciences</option>
-                    <option value="Basic Medical Sciences">Basic Medical Sciences</option>
-                    <option value="Environmental Sciences">Environmental Sciences</option>
+                    <option value="Physical & Computing Sciences">
+                      Physical & Computing Sciences
+                    </option>
+                    <option value="Engineering & Technology">
+                      Engineering & Technology
+                    </option>
+                    <option value="Management & Social Sciences">
+                      Management & Social Sciences
+                    </option>
+                    <option value="Basic Medical Sciences">
+                      Basic Medical Sciences
+                    </option>
+                    <option value="Environmental Sciences">
+                      Environmental Sciences
+                    </option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Course Code *</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Course Code *
+                  </label>
                   <input
                     type="text"
                     required
@@ -280,7 +343,9 @@ export const QAOfficerPortal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Course Title</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Course Title
+                  </label>
                   <input
                     type="text"
                     value={courseTitle}
@@ -290,7 +355,9 @@ export const QAOfficerPortal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Scheduled Lecturer</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Scheduled Lecturer
+                  </label>
                   <input
                     type="text"
                     value={scheduledLecturer}
@@ -300,7 +367,9 @@ export const QAOfficerPortal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Actual Lecturer Present</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Actual Lecturer Present
+                  </label>
                   <input
                     type="text"
                     value={actualLecturer}
@@ -312,7 +381,9 @@ export const QAOfficerPortal: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Time Slot</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Time Slot
+                  </label>
                   <input
                     type="text"
                     value={timeSlot}
@@ -322,7 +393,9 @@ export const QAOfficerPortal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Hall Seating Capacity</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Hall Seating Capacity
+                  </label>
                   <input
                     type="number"
                     value={hallCapacity}
@@ -332,16 +405,25 @@ export const QAOfficerPortal: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Actual Student Headcount</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Actual Student Headcount
+                  </label>
                   <input
                     type="number"
                     value={studentHeadcount}
-                    onChange={(e) => setStudentHeadcount(Number(e.target.value))}
+                    onChange={(e) =>
+                      setStudentHeadcount(Number(e.target.value))
+                    }
                     className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg bg-white"
                   />
                   {studentHeadcount > hallCapacity && (
                     <span className="text-[10px] text-rose-600 font-bold block mt-0.5">
-                      ⚠️ Overcrowded: {Math.round(((studentHeadcount - hallCapacity) / hallCapacity) * 100)}% over capacity
+                      ⚠️ Overcrowded:{" "}
+                      {Math.round(
+                        ((studentHeadcount - hallCapacity) / hallCapacity) *
+                          100,
+                      )}
+                      % over capacity
                     </span>
                   )}
                 </div>
@@ -359,22 +441,30 @@ export const QAOfficerPortal: React.FC = () => {
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
                   <div className="flex justify-between items-center text-xs font-bold text-slate-800">
                     <span>Lecturer Timetable Punctuality</span>
-                    <span className="text-purple-700 font-mono">Weight: 25%</span>
+                    <span className="text-purple-700 font-mono">
+                      Weight: 25%
+                    </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { id: 'punctual', label: 'Punctual (On Time)' },
-                      { id: 'late_10m', label: 'Late (>10 mins)' },
-                      { id: 'absent', label: 'Unannounced Absent' }
+                      { id: "punctual", label: "Punctual (On Time)" },
+                      { id: "late_10m", label: "Late (>10 mins)" },
+                      { id: "absent", label: "Unannounced Absent" },
                     ].map((opt) => (
                       <button
                         type="button"
                         key={opt.id}
-                        onClick={() => setChecklist(prev => ({ ...prev, lecturerPunctuality: opt.id as any }))}
-                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${checklist.lecturerPunctuality === opt.id
-                            ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
-                            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
-                          }`}
+                        onClick={() =>
+                          setChecklist((prev) => ({
+                            ...prev,
+                            lecturerPunctuality: opt.id as any,
+                          }))
+                        }
+                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
+                          checklist.lecturerPunctuality === opt.id
+                            ? "bg-purple-600 text-white border-purple-600 shadow-xs"
+                            : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                        }`}
                       >
                         {opt.label}
                       </button>
@@ -386,22 +476,30 @@ export const QAOfficerPortal: React.FC = () => {
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
                   <div className="flex justify-between items-center text-xs font-bold text-slate-800">
                     <span>Audiovisual (PA System / Projector)</span>
-                    <span className="text-purple-700 font-mono">Weight: 15%</span>
+                    <span className="text-purple-700 font-mono">
+                      Weight: 15%
+                    </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { id: 'functional', label: 'Working & Clear' },
-                      { id: 'intermittent', label: 'Intermittent / Glitch' },
-                      { id: 'faulty', label: 'Broken / Missing' }
+                      { id: "functional", label: "Working & Clear" },
+                      { id: "intermittent", label: "Intermittent / Glitch" },
+                      { id: "faulty", label: "Broken / Missing" },
                     ].map((opt) => (
                       <button
                         type="button"
                         key={opt.id}
-                        onClick={() => setChecklist(prev => ({ ...prev, audiovisualStatus: opt.id as any }))}
-                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${checklist.audiovisualStatus === opt.id
-                            ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
-                            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
-                          }`}
+                        onClick={() =>
+                          setChecklist((prev) => ({
+                            ...prev,
+                            audiovisualStatus: opt.id as any,
+                          }))
+                        }
+                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
+                          checklist.audiovisualStatus === opt.id
+                            ? "bg-purple-600 text-white border-purple-600 shadow-xs"
+                            : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                        }`}
                       >
                         {opt.label}
                       </button>
@@ -413,22 +511,30 @@ export const QAOfficerPortal: React.FC = () => {
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
                   <div className="flex justify-between items-center text-xs font-bold text-slate-800">
                     <span>Hall Cleanliness & Waste Disposal</span>
-                    <span className="text-purple-700 font-mono">Weight: 15%</span>
+                    <span className="text-purple-700 font-mono">
+                      Weight: 15%
+                    </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { id: 'compliant', label: 'Sanitary / Clean' },
-                      { id: 'minor_litter', label: 'Minor Litter' },
-                      { id: 'unsanitary', label: 'Dirty / Unsanitary' }
+                      { id: "compliant", label: "Sanitary / Clean" },
+                      { id: "minor_litter", label: "Minor Litter" },
+                      { id: "unsanitary", label: "Dirty / Unsanitary" },
                     ].map((opt) => (
                       <button
                         type="button"
                         key={opt.id}
-                        onClick={() => setChecklist(prev => ({ ...prev, hallCleanliness: opt.id as any }))}
-                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${checklist.hallCleanliness === opt.id
-                            ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
-                            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
-                          }`}
+                        onClick={() =>
+                          setChecklist((prev) => ({
+                            ...prev,
+                            hallCleanliness: opt.id as any,
+                          }))
+                        }
+                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
+                          checklist.hallCleanliness === opt.id
+                            ? "bg-purple-600 text-white border-purple-600 shadow-xs"
+                            : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                        }`}
                       >
                         {opt.label}
                       </button>
@@ -440,22 +546,30 @@ export const QAOfficerPortal: React.FC = () => {
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
                   <div className="flex justify-between items-center text-xs font-bold text-slate-800">
                     <span>Seating Adequacy & Furniture State</span>
-                    <span className="text-purple-700 font-mono">Weight: 15%</span>
+                    <span className="text-purple-700 font-mono">
+                      Weight: 15%
+                    </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { id: 'sufficient', label: 'Adequate Desks' },
-                      { id: 'overcrowded', label: 'Standing Students' },
-                      { id: 'broken_furniture', label: 'Broken Benches' }
+                      { id: "sufficient", label: "Adequate Desks" },
+                      { id: "overcrowded", label: "Standing Students" },
+                      { id: "broken_furniture", label: "Broken Benches" },
                     ].map((opt) => (
                       <button
                         type="button"
                         key={opt.id}
-                        onClick={() => setChecklist(prev => ({ ...prev, seatingAdequacy: opt.id as any }))}
-                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${checklist.seatingAdequacy === opt.id
-                            ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
-                            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
-                          }`}
+                        onClick={() =>
+                          setChecklist((prev) => ({
+                            ...prev,
+                            seatingAdequacy: opt.id as any,
+                          }))
+                        }
+                        className={`p-2 rounded-lg text-xs font-medium border text-center transition-all cursor-pointer ${
+                          checklist.seatingAdequacy === opt.id
+                            ? "bg-purple-600 text-white border-purple-600 shadow-xs"
+                            : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+                        }`}
                       >
                         {opt.label}
                       </button>
@@ -467,21 +581,29 @@ export const QAOfficerPortal: React.FC = () => {
               {/* Ventilation, Syllabus & CA toggles */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
                 <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
-                  <div className="text-xs font-bold text-slate-800">Ventilation & Illumination</div>
+                  <div className="text-xs font-bold text-slate-800">
+                    Ventilation & Illumination
+                  </div>
                   <div className="flex gap-2">
                     {[
-                      { id: 'adequate', label: 'Adequate' },
-                      { id: 'fair', label: 'Fair' },
-                      { id: 'poor_ac_lighting', label: 'Poor / Hot' }
+                      { id: "adequate", label: "Adequate" },
+                      { id: "fair", label: "Fair" },
+                      { id: "poor_ac_lighting", label: "Poor / Hot" },
                     ].map((v) => (
                       <button
                         type="button"
                         key={v.id}
-                        onClick={() => setChecklist(prev => ({ ...prev, ventilationAndLighting: v.id as any }))}
-                        className={`flex-1 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${checklist.ventilationAndLighting === v.id
-                            ? 'bg-purple-600 text-white border-purple-600'
-                            : 'bg-white text-slate-700 border-slate-300'
-                          }`}
+                        onClick={() =>
+                          setChecklist((prev) => ({
+                            ...prev,
+                            ventilationAndLighting: v.id as any,
+                          }))
+                        }
+                        className={`flex-1 py-1.5 text-xs font-medium rounded-lg border transition-all cursor-pointer ${
+                          checklist.ventilationAndLighting === v.id
+                            ? "bg-purple-600 text-white border-purple-600"
+                            : "bg-white text-slate-700 border-slate-300"
+                        }`}
                       >
                         {v.label}
                       </button>
@@ -491,26 +613,44 @@ export const QAOfficerPortal: React.FC = () => {
 
                 <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-bold text-slate-800">Syllabus Outline in Class</div>
-                    <div className="text-[11px] text-slate-500">Students possess printed or digital pack</div>
+                    <div className="text-xs font-bold text-slate-800">
+                      Syllabus Outline in Class
+                    </div>
+                    <div className="text-[11px] text-slate-500">
+                      Students possess printed or digital pack
+                    </div>
                   </div>
                   <input
                     type="checkbox"
                     checked={checklist.syllabusAvailableToStudents}
-                    onChange={(e) => setChecklist(prev => ({ ...prev, syllabusAvailableToStudents: e.target.checked }))}
+                    onChange={(e) =>
+                      setChecklist((prev) => ({
+                        ...prev,
+                        syllabusAvailableToStudents: e.target.checked,
+                      }))
+                    }
                     className="w-5 h-5 text-purple-600 rounded border-slate-300 focus:ring-purple-500 cursor-pointer"
                   />
                 </div>
 
                 <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-bold text-slate-800">Continuous Assessment Date</div>
-                    <div className="text-[11px] text-slate-500">Scheduled test date officially declared</div>
+                    <div className="text-xs font-bold text-slate-800">
+                      Continuous Assessment Date
+                    </div>
+                    <div className="text-[11px] text-slate-500">
+                      Scheduled test date officially declared
+                    </div>
                   </div>
                   <input
                     type="checkbox"
                     checked={checklist.continuousAssessmentAnnounced}
-                    onChange={(e) => setChecklist(prev => ({ ...prev, continuousAssessmentAnnounced: e.target.checked }))}
+                    onChange={(e) =>
+                      setChecklist((prev) => ({
+                        ...prev,
+                        continuousAssessmentAnnounced: e.target.checked,
+                      }))
+                    }
                     className="w-5 h-5 text-purple-600 rounded border-slate-300 focus:ring-purple-500 cursor-pointer"
                   />
                 </div>
@@ -537,11 +677,14 @@ export const QAOfficerPortal: React.FC = () => {
                 />
               </div>
 
-              {calculatedStatus !== 'passed' && (
+              {calculatedStatus !== "passed" && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-2">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900">
                     <AlertTriangle className="w-4 h-4 text-amber-600" />
-                    <span>Rectification Notice Required (Non-Compliant Criteria Detected)</span>
+                    <span>
+                      Rectification Notice Required (Non-Compliant Criteria
+                      Detected)
+                    </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div>
@@ -551,12 +694,15 @@ export const QAOfficerPortal: React.FC = () => {
                       <input
                         type="date"
                         value={rectificationDeadline}
-                        onChange={(e) => setRectificationDeadline(e.target.value)}
+                        onChange={(e) =>
+                          setRectificationDeadline(e.target.value)
+                        }
                         className="w-full px-3 py-1.5 text-xs border border-amber-300 rounded-lg bg-white"
                       />
                     </div>
                     <div className="text-xs text-amber-800 flex items-center">
-                      Notification will be dispatched to Dean of Faculty and Directorate of Works for immediate repair requisition.
+                      Notification will be dispatched to Dean of Faculty and
+                      Directorate of Works for immediate repair requisition.
                     </div>
                   </div>
                 </div>
@@ -582,7 +728,7 @@ export const QAOfficerPortal: React.FC = () => {
       )}
 
       {/* Tab 2: Campus Audit Registry */}
-      {activeTab === 'registry' && (
+      {activeTab === "registry" && (
         <div className="space-y-4">
           <div className="bg-white p-4 rounded-xl border border-[#CBDAD6] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 flex-1 max-w-md">
@@ -605,8 +751,12 @@ export const QAOfficerPortal: React.FC = () => {
               >
                 <option value="all">All Audits ({qaAudits.length})</option>
                 <option value="passed">Passed ({passCount})</option>
-                <option value="conditional_pass">Conditional ({conditionalCount})</option>
-                <option value="non_compliant">Action Required ({nonCompliantCount})</option>
+                <option value="conditional_pass">
+                  Conditional ({conditionalCount})
+                </option>
+                <option value="non_compliant">
+                  Action Required ({nonCompliantCount})
+                </option>
               </select>
             </div>
           </div>
@@ -634,11 +784,21 @@ export const QAOfficerPortal: React.FC = () => {
 
                     <h4 className="font-serif font-semibold text-[#1A2421] text-base mt-2 flex items-center gap-2">
                       <span>{item.hallName}</span>
-                      <span className="text-xs font-normal text-[#526460]">({item.building})</span>
+                      <span className="text-xs font-normal text-[#526460]">
+                        ({item.building})
+                      </span>
                     </h4>
 
                     <div className="text-xs text-[#526460] mt-1">
-                      <strong className="text-[#1A2421]">Course:</strong> {item.courseCode} — {item.courseTitle} • <strong className="text-[#1A2421]">Lecturer:</strong> {item.scheduledLecturer} {item.actualLecturer !== item.scheduledLecturer && <span className="text-[#E7A33E] font-semibold">(Delegate: {item.actualLecturer})</span>}
+                      <strong className="text-[#1A2421]">Course:</strong>{" "}
+                      {item.courseCode} — {item.courseTitle} •{" "}
+                      <strong className="text-[#1A2421]">Lecturer:</strong>{" "}
+                      {item.scheduledLecturer}{" "}
+                      {item.actualLecturer !== item.scheduledLecturer && (
+                        <span className="text-[#E7A33E] font-semibold">
+                          (Delegate: {item.actualLecturer})
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -647,17 +807,25 @@ export const QAOfficerPortal: React.FC = () => {
                       <span className="text-xl font-medium text-[#1A2421] font-mono">
                         {item.overallScorePercentage}%
                       </span>
-                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full uppercase ${item.status === 'passed'
-                          ? 'bg-[#2F6E5F]/15 text-[#2F6E5F] border border-[#2F6E5F]/30'
-                          : item.status === 'conditional_pass'
-                            ? 'bg-[#E7A33E]/20 text-[#8F5A0E] border border-[#E7A33E]/40'
-                            : 'bg-[#B93826]/15 text-[#B93826] border border-[#B93826]/30'
-                        }`}>
-                        {item.status === 'passed' ? 'Compliant' : item.status === 'conditional_pass' ? 'Action Notice' : 'Attention Required'}
+                      <span
+                        className={`text-xs font-medium px-2.5 py-1 rounded-full uppercase ${
+                          item.status === "passed"
+                            ? "bg-[#2F6E5F]/15 text-[#2F6E5F] border border-[#2F6E5F]/30"
+                            : item.status === "conditional_pass"
+                              ? "bg-[#E7A33E]/20 text-[#8F5A0E] border border-[#E7A33E]/40"
+                              : "bg-[#B93826]/15 text-[#B93826] border border-[#B93826]/30"
+                        }`}
+                      >
+                        {item.status === "passed"
+                          ? "Compliant"
+                          : item.status === "conditional_pass"
+                            ? "Action Notice"
+                            : "Attention Required"}
                       </span>
                     </div>
                     <div className="text-[11px] text-[#526460] mt-1">
-                      Headcount: {item.checklist.studentHeadcount} / Capacity: {item.checklist.hallCapacity}
+                      Headcount: {item.checklist.studentHeadcount} / Capacity:{" "}
+                      {item.checklist.hallCapacity}
                     </div>
                   </div>
                 </div>
@@ -668,7 +836,9 @@ export const QAOfficerPortal: React.FC = () => {
 
                 {item.rectificationDeadline && (
                   <div className="text-xs text-amber-800 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 flex items-center justify-between">
-                    <span>⚠️ Remediation Notice Dispatched to Faculty Dean</span>
+                    <span>
+                      ⚠️ Remediation Notice Dispatched to Faculty Dean
+                    </span>
                     <span>Deadline: {item.rectificationDeadline}</span>
                   </div>
                 )}

@@ -86,3 +86,183 @@
     BlinkMacSystemFont,
     sans-serif;
 }
+
+:root[data-font-scale="large"] {
+  font-size: 112.5%;
+}
+
+:root[data-font-scale="xlarge"] {
+  font-size: 125%;
+}
+
+:root[data-reduced-motion="true"] *,
+:root[data-reduced-motion="true"] *::before,
+:root[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+}
+
+:root[data-high-contrast="true"] body {
+  filter: contrast(1.12);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --dark-canvas: #0b1220;
+  --dark-surface: #172235;
+  --dark-surface-raised: #223047;
+  --dark-border: #475569;
+  --dark-text: #f8fafc;
+  --dark-muted: #cbd5e1;
+}
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root,
+:root[data-theme="dark"] [class~="bg-[#EFF3F1]"] {
+  background-color: var(--dark-canvas) !important;
+  color: var(--dark-text) !important;
+}
+
+/* Shared light surfaces become layered dark surfaces across every portal. */
+:root[data-theme="dark"] .dark-panel,
+:root[data-theme="dark"] [class~="bg-white"],
+:root[data-theme="dark"] [class~="bg-slate-50"],
+:root[data-theme="dark"] [class~="bg-slate-100"],
+:root[data-theme="dark"] [class~="bg-[#EFF3F1]"],
+:root[data-theme="dark"] [class~="bg-[#EFF3F1]/50"],
+:root[data-theme="dark"] [class~="bg-amber-50"],
+:root[data-theme="dark"] [class~="bg-amber-50/60"],
+:root[data-theme="dark"] [class~="bg-rose-50"],
+:root[data-theme="dark"] [class~="bg-emerald-50"] {
+  background-color: var(--dark-surface) !important;
+  color: var(--dark-text) !important;
+  border-color: var(--dark-border) !important;
+}
+
+:root[data-theme="dark"] [class~="bg-white/80"] {
+  background-color: rgb(34 48 71 / 88%) !important;
+}
+
+/* Preserve readable copy when components use the light-theme hex tokens. */
+:root[data-theme="dark"] [class~="text-[#1A2421]"],
+:root[data-theme="dark"] [class~="text-[#12332F]"],
+:root[data-theme="dark"] [class~="text-slate-900"],
+:root[data-theme="dark"] [class~="text-slate-800"],
+:root[data-theme="dark"] [class~="text-slate-700"] {
+  color: var(--dark-text) !important;
+}
+
+:root[data-theme="dark"] [class~="text-[#526460]"],
+:root[data-theme="dark"] [class~="text-slate-600"],
+:root[data-theme="dark"] [class~="text-slate-500"],
+:root[data-theme="dark"] [class~="text-slate-400"] {
+  color: var(--dark-muted) !important;
+}
+
+:root[data-theme="dark"] [class~="text-[#1A2421]/70"],
+:root[data-theme="dark"] [class~="text-[#1A2421]/60"],
+:root[data-theme="dark"] [class~="text-[#1A2421]/50"],
+:root[data-theme="dark"] [class~="text-[#EFF3F1]/70"],
+:root[data-theme="dark"] [class~="text-[#EFF3F1]/60"] {
+  color: var(--dark-muted) !important;
+}
+
+:root[data-theme="dark"] [class~="border-slate-200"],
+:root[data-theme="dark"] [class~="border-slate-300"],
+:root[data-theme="dark"] [class~="border-[#CBDAD6]"],
+:root[data-theme="dark"] [class~="border-[#CBDAD6]/60"],
+:root[data-theme="dark"] [class~="border-[#CBDAD6]/50"] {
+  border-color: var(--dark-border) !important;
+}
+
+/* Dark-mode hover states use a raised surface instead of flashing white. */
+:root[data-theme="dark"] [class*="hover:bg-"]:hover {
+  background-color: var(--dark-surface-raised) !important;
+  color: var(--dark-text) !important;
+  border-color: #60a5fa !important;
+}
+
+:root[data-theme="dark"] [class*="hover:border-"]:hover {
+  border-color: #d4af37 !important;
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select {
+  background-color: #111827 !important;
+  color: var(--dark-text) !important;
+  border-color: var(--dark-border) !important;
+}
+
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Keep the navigation shell cool and restrained in dark mode; green is reserved for success states. */
+:root[data-theme="dark"] .qas-sidebar,
+:root[data-theme="dark"] .qas-topbar,
+:root[data-theme="dark"] .qas-header,
+:root[data-theme="dark"] .qas-footer,
+:root[data-theme="dark"] .qas-welcome {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .qas-profile {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .qas-profile [class*="hover:bg-[#163C37]"]:hover {
+  background-color: #2b3d59 !important;
+  border-color: #60a5fa !important;
+}
+
+:root[data-theme="dark"] .qas-profile [class~="bg-[#2F6E5F]"] {
+  background-color: #3569a8 !important;
+  color: #ffffff !important;
+}
+
+:root[data-theme="dark"] .qas-profile [id="sidebar-role-switcher-dropdown"] {
+  background-color: #172235 !important;
+  border-color: #475569 !important;
+  color: #f8fafc !important;
+}
+
+:root[data-theme="dark"]
+  .qas-profile
+  [id="sidebar-role-switcher-dropdown"]
+  [class~="hover:bg-white"]:hover {
+  background-color: #223047 !important;
+}
+
+:root[data-theme="dark"] .qas-sidebar [class~="bg-[#0E2A27]"],
+:root[data-theme="dark"] .qas-topbar [class~="bg-[#0E2A27]"],
+:root[data-theme="dark"] .qas-header [class~="bg-[#0E2A27]"],
+:root[data-theme="dark"] .qas-sidebar [class~="bg-[#1A433E]"],
+:root[data-theme="dark"] .qas-topbar [class~="bg-[#1A433E]"],
+:root[data-theme="dark"] .qas-header [class~="bg-[#1A433E]"] {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+:root[data-theme="dark"] .qas-welcome [class~="bg-[#1A433E]"] {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+:root[data-theme="dark"] .qas-sidebar [class*="hover:bg-[#1A433E]"]:hover,
+:root[data-theme="dark"] .qas-topbar [class*="hover:bg-[#1A433E]"]:hover,
+:root[data-theme="dark"] .qas-header [class*="hover:bg-[#20504A]"]:hover {
+  background-color: #2b3d59 !important;
+  border-color: #60a5fa !important;
+}
+
+:root[data-theme="dark"] .qas-topbar [class~="bg-[#E7A33E]"],
+:root[data-theme="dark"] .qas-header [class~="bg-[#E7A33E]"] {
+  background-color: #3569a8 !important;
+  color: #ffffff !important;
+}

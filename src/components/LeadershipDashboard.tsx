@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApp } from "../context/AppContext";
 import {
   BarChart,
@@ -42,7 +42,22 @@ export const LeadershipDashboard: React.FC = () => {
     qaAudits,
     facultyStats,
     charterMetrics,
+    activeNav,
   } = useApp();
+
+  useEffect(() => {
+    const targetId =
+      activeNav === "evaluations"
+        ? "leadership-quality"
+        : activeNav === "lodge"
+          ? "leadership-escalations"
+          : activeNav === "track"
+            ? "leadership-reports"
+            : "leadership-overview";
+    document
+      .getElementById(targetId)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [activeNav]);
 
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedAlertFilter, setSelectedAlertFilter] = useState<
@@ -165,12 +180,15 @@ export const LeadershipDashboard: React.FC = () => {
       ? criticalAlerts
       : selectedAlertFilter === "audits"
         ? criticalAlerts.filter(
-          (a) => a.type === "audit" || a.type === "evaluation",
-        )
+            (a) => a.type === "audit" || a.type === "evaluation",
+          )
         : criticalAlerts.filter((a) => a.type === "complaint");
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 font-sans text-[#1A2421]">
+    <div
+      id="leadership-overview"
+      className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 font-sans text-[#1A2421]"
+    >
       {/* Leadership Header Banner */}
       <div className="bg-[#12332F] rounded-2xl p-6 sm:p-7 text-[#FBF9F4] shadow-md border border-[#1A433E]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
@@ -305,7 +323,10 @@ export const LeadershipDashboard: React.FC = () => {
       {/* Side-by-Side: Trend Chart + Critical Alerts Panel */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Left Col (7 cols): Trend Chart */}
-        <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-[#CBDAD6] shadow-xs flex flex-col justify-between">
+        <div
+          id="leadership-quality"
+          className="lg:col-span-7 bg-white p-6 rounded-2xl border border-[#CBDAD6] shadow-xs flex flex-col justify-between"
+        >
           <div className="space-y-1 mb-4">
             <div className="flex items-center justify-between">
               <h3 className="font-serif text-lg font-semibold text-[#12332F]">
@@ -401,7 +422,10 @@ export const LeadershipDashboard: React.FC = () => {
         </div>
 
         {/* Right Col (5 cols): Critical Alerts Panel */}
-        <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-[#CBDAD6] shadow-xs flex flex-col justify-between">
+        <div
+          id="leadership-escalations"
+          className="lg:col-span-5 bg-white p-6 rounded-2xl border border-[#CBDAD6] shadow-xs flex flex-col justify-between"
+        >
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-[#CBDAD6]/60 mb-3">
               <div>
@@ -430,10 +454,11 @@ export const LeadershipDashboard: React.FC = () => {
                 <button
                   key={f.id}
                   onClick={() => setSelectedAlertFilter(f.id as any)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${selectedAlertFilter === f.id
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                    selectedAlertFilter === f.id
                       ? "bg-[#12332F] text-[#FBF9F4]"
                       : "bg-[#EFF3F1] text-[#1A2421] hover:bg-[#CBDAD6]/60"
-                    }`}
+                  }`}
                 >
                   {f.label}
                 </button>
@@ -522,7 +547,10 @@ export const LeadershipDashboard: React.FC = () => {
       </div>
 
       {/* Faculty Governance League Table */}
-      <div className="bg-white rounded-2xl border border-[#CBDAD6] p-6 shadow-xs space-y-4">
+      <div
+        id="leadership-reports"
+        className="bg-white rounded-2xl border border-[#CBDAD6] p-6 shadow-xs space-y-4"
+      >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="font-serif text-lg font-semibold text-[#12332F]">
@@ -590,10 +618,11 @@ export const LeadershipDashboard: React.FC = () => {
                   </td>
                   <td className="py-3.5 px-3">
                     <span
-                      className={`px-2.5 py-1 rounded-full text-[11px] font-medium inline-flex items-center gap-1 ${f.qaAuditPassRate >= 90
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-medium inline-flex items-center gap-1 ${
+                        f.qaAuditPassRate >= 90
                           ? "bg-[#2F6E5F]/15 text-[#2F6E5F] border border-[#2F6E5F]/30"
                           : "bg-[#E7A33E]/15 text-[#1A2421] border border-[#E7A33E]/30"
-                        }`}
+                      }`}
                     >
                       <span
                         className={`w-1.5 h-1.5 rounded-full ${f.qaAuditPassRate >= 90 ? "bg-[#2F6E5F]" : "bg-[#E7A33E]"}`}
