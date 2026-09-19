@@ -206,9 +206,24 @@
 :root[data-theme="dark"] .qas-topbar,
 :root[data-theme="dark"] .qas-header,
 :root[data-theme="dark"] .qas-footer,
-:root[data-theme="dark"] .qas-welcome {
+:root[data-theme="dark"] .qas-welcome,
+:root[data-theme="dark"] .qas-mobile-nav {
   background-color: #111827 !important;
   border-color: #334155 !important;
+}
+
+:root[data-theme="dark"] .qas-mobile-nav [class*="hover:bg-"]:hover {
+  background-color: #2b3d59 !important;
+  color: #f8fafc !important;
+}
+
+:root[data-theme="dark"] .qas-mobile-nav [class*="text-[#E7A33E]"] {
+  color: #93c5fd !important;
+}
+
+:root[data-theme="dark"] .qas-mobile-nav [class*="bg-[#E7A33E]"] {
+  background-color: #3569a8 !important;
+  color: #ffffff !important;
 }
 
 :root[data-theme="dark"] .qas-profile {

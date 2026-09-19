@@ -82,7 +82,7 @@ export const BottomTabBar: React.FC = () => {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#12332F] border-t border-[#1A433E] px-2 py-1 flex items-center justify-around shadow-2xl"
+      className="qas-mobile-nav md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#12332F] border-t border-[#1A433E] px-2 py-1 flex items-center justify-around shadow-2xl"
       aria-label="Mobile Bottom Navigation"
     >
       {tabs.map((tab) => {
