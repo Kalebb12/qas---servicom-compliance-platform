@@ -352,7 +352,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Stakeholder Role Switcher Dropdown (Upward) */}
         {roleMenuOpen && (
           <div
-            className="absolute bottom-full left-3 right-3 mb-2 bg-[#EFF3F1] text-[#1A2421] rounded-xl shadow-2xl border border-[#CBDAD6] py-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150"
+            className="qas-role-switcher absolute bottom-full left-3 right-3 mb-2 bg-[#EFF3F1] text-[#1A2421] rounded-xl shadow-2xl border border-[#CBDAD6] py-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150"
             id="sidebar-role-switcher-dropdown"
           >
             <div className="px-3 py-2 border-b border-[#CBDAD6] mb-1 flex items-center justify-between">

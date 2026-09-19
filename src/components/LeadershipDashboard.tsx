@@ -190,7 +190,7 @@ export const LeadershipDashboard: React.FC = () => {
       className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 font-sans text-[#1A2421]"
     >
       {/* Leadership Header Banner */}
-      <div className="bg-[#12332F] rounded-2xl p-6 sm:p-7 text-[#FBF9F4] shadow-md border border-[#1A433E]">
+      <div className="qas-portal-banner bg-[#12332F] rounded-2xl p-6 sm:p-7 text-[#FBF9F4] shadow-md border border-[#1A433E]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2F6E5F]/30 text-[#EFF3F1] text-xs font-medium mb-2 border border-[#2F6E5F]/50">
@@ -424,7 +424,7 @@ export const LeadershipDashboard: React.FC = () => {
         {/* Right Col (5 cols): Critical Alerts Panel */}
         <div
           id="leadership-escalations"
-          className="lg:col-span-5 bg-white p-6 rounded-2xl border border-[#CBDAD6] shadow-xs flex flex-col justify-between"
+          className="qas-priority-followups lg:col-span-5 bg-white p-6 rounded-2xl border border-[#CBDAD6] shadow-xs flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-[#CBDAD6]/60 mb-3">

@@ -165,7 +165,7 @@ export const QAOfficerPortal: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 font-sans text-[#1A2421]">
       {/* Header Banner */}
-      <div className="bg-[#12332F] rounded-2xl p-6 sm:p-7 text-[#FBF9F4] shadow-md border border-[#1A433E] relative overflow-hidden">
+      <div className="qas-portal-banner bg-[#12332F] rounded-2xl p-6 sm:p-7 text-[#FBF9F4] shadow-md border border-[#1A433E] relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#2F6E5F]/30 text-[#EFF3F1] text-xs font-medium mb-1 border border-[#2F6E5F]/50">
@@ -235,7 +235,7 @@ export const QAOfficerPortal: React.FC = () => {
         <form onSubmit={handleSubmitAudit} className="space-y-6">
           <div className="bg-white rounded-2xl border border-[#CBDAD6] p-6 shadow-xs space-y-6">
             {/* Live Score Floating Ribbon */}
-            <div className="bg-[#12332F] text-[#FBF9F4] rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 border border-[#1A433E]">
+            <div className="qas-live-audit bg-[#12332F] text-[#FBF9F4] rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 border border-[#1A433E]">
               <div className="flex items-center gap-3">
                 <div
                   className={`w-12 h-12 rounded-xl flex items-center justify-center font-medium text-lg ${

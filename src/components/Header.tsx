@@ -215,7 +215,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTrackModal }) => {
             {/* Persona Switcher Dropdown */}
             {roleMenuOpen && (
               <div
-                className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#EFF3F1] text-[#1A2421] rounded-xl shadow-2xl border border-[#CBDAD6] py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+                className="qas-role-switcher absolute right-0 mt-2 w-80 sm:w-96 bg-[#EFF3F1] text-[#1A2421] rounded-xl shadow-2xl border border-[#CBDAD6] py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
                 id="role-switcher-dropdown"
               >
                 <div className="px-3.5 py-2.5 border-b border-[#CBDAD6] mb-1">

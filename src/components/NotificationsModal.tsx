@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useApp } from '../context/AppContext';
+import * as React from "react";
+import { useApp } from "../context/AppContext";
 import {
   Bell,
   X,
@@ -9,8 +9,8 @@ import {
   BookOpen,
   CheckCheck,
   ArrowRight,
-  ShieldAlert
-} from 'lucide-react';
+  ShieldAlert,
+} from "lucide-react";
 
 export const NotificationsModal: React.FC = () => {
   const {
@@ -19,7 +19,7 @@ export const NotificationsModal: React.FC = () => {
     notifications,
     markNotificationAsRead,
     markAllNotificationsAsRead,
-    setActiveNav
+    setActiveNav,
   } = useApp();
 
   if (!isNotificationsOpen) return null;
@@ -27,12 +27,12 @@ export const NotificationsModal: React.FC = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
       <div
-        className="bg-[#EFF3F1] border border-[#CBDAD6] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[85vh] font-sans text-[#1A2421]"
+        className="qas-notifications bg-[#EFF3F1] border border-[#CBDAD6] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[85vh] font-sans text-[#1A2421]"
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
-        <div className="bg-[#12332F] text-[#FBF9F4] p-4 sm:p-5 flex items-center justify-between border-b border-[#1A433E]">
+        <div className="qas-notifications-header bg-[#12332F] text-[#FBF9F4] p-4 sm:p-5 flex items-center justify-between border-b border-[#1A433E]">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[#E7A33E] text-[#12332F] flex items-center justify-center font-bold">
               <Bell className="w-4 h-4" />
@@ -59,7 +59,7 @@ export const NotificationsModal: React.FC = () => {
         {/* Actions bar */}
         <div className="bg-white px-4 py-2.5 border-b border-[#CBDAD6] flex items-center justify-between text-xs text-[#526460]">
           <span>
-            {notifications.filter(n => !n.isRead).length} unread updates
+            {notifications.filter((n) => !n.isRead).length} unread updates
           </span>
           <button
             onClick={markAllNotificationsAsRead}
@@ -75,25 +75,28 @@ export const NotificationsModal: React.FC = () => {
           {notifications.length === 0 ? (
             <div className="text-center py-12 text-[#526460]">
               <Bell className="w-8 h-8 mx-auto text-[#CBDAD6] mb-2" />
-              <p className="text-sm font-medium">No notifications at this time</p>
+              <p className="text-sm font-medium">
+                No notifications at this time
+              </p>
             </div>
           ) : (
             notifications.map((item) => (
               <div
                 key={item.id}
                 onClick={() => markNotificationAsRead(item.id)}
-                className={`p-3.5 rounded-xl border transition-all cursor-pointer ${item.isRead
-                    ? 'bg-white border-[#CBDAD6]/70 text-[#526460]'
-                    : 'bg-white border-[#12332F]/40 shadow-xs ring-1 ring-[#12332F]/10'
-                  }`}
+                className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                  item.isRead
+                    ? "bg-white border-[#CBDAD6]/70 text-[#526460]"
+                    : "bg-white border-[#12332F]/40 shadow-xs ring-1 ring-[#12332F]/10"
+                }`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    {item.priority === 'urgent' ? (
+                    {item.priority === "urgent" ? (
                       <span className="p-1 rounded-md bg-[#B93826]/10 text-[#B93826]">
                         <AlertTriangle className="w-3.5 h-3.5" />
                       </span>
-                    ) : item.priority === 'success' ? (
+                    ) : item.priority === "success" ? (
                       <span className="p-1 rounded-md bg-[#2F6E5F]/15 text-[#2F6E5F]">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                       </span>

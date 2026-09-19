@@ -46,7 +46,7 @@ const MainContent: React.FC = () => {
     <div className="min-h-screen bg-[#EFF3F1] flex font-sans text-[#1A2421]">
       {/* Toast Notification */}
       {notificationMessage && (
-        <div className="fixed bottom-16 md:bottom-6 right-4 sm:right-6 z-50 bg-[#12332F] text-[#FBF9F4] px-4 py-3 rounded-xl shadow-2xl border border-[#275B52] flex items-center gap-3 text-xs font-medium animate-in fade-in slide-in-from-bottom-4 duration-200 max-w-md">
+        <div className="qas-toast fixed bottom-16 md:bottom-6 right-4 sm:right-6 z-50 bg-[#12332F] text-[#FBF9F4] px-4 py-3 rounded-xl shadow-2xl border border-[#275B52] flex items-center gap-3 text-xs font-medium animate-in fade-in slide-in-from-bottom-4 duration-200 max-w-md">
           <CheckCircle2 className="w-4 h-4 text-[#E7A33E] shrink-0" />
           <span>{notificationMessage}</span>
         </div>

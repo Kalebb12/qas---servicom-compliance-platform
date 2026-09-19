@@ -165,6 +165,12 @@ export const StudentPortal: React.FC = () => {
       c.studentMatric === currentUser.identifier ||
       (!c.isAnonymous && c.studentName === currentUser.name),
   );
+  const activeHighPriorityCount = myComplaints.filter(
+    (complaint) =>
+      complaint.priority === "high" &&
+      complaint.status !== "resolved" &&
+      complaint.status !== "closed",
+  ).length;
 
   // "Top 3 complaints" trend widget: count complaints by category, scoped to
   // this student's department and separately across the whole university.
@@ -329,6 +335,8 @@ export const StudentPortal: React.FC = () => {
       evidenceAttachmentName: attachmentName || undefined,
     });
 
+    if (!code) return;
+
     setGeneratedTrackingCode(code);
     // Clear form
     setComplaintTitle("");
@@ -426,7 +434,7 @@ export const StudentPortal: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 font-sans text-[#1A2421]">
       {/* Student Welcome Banner */}
-      <div className="qas-welcome bg-[#12332F] rounded-2xl p-4 sm:p-6 text-[#FBF9F4] shadow-md relative overflow-hidden border border-[#1A433E]">
+      <div className="qas-portal-banner qas-welcome bg-[#12332F] rounded-2xl p-4 sm:p-6 text-[#FBF9F4] shadow-md relative overflow-hidden border border-[#1A433E]">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
@@ -879,9 +887,18 @@ export const StudentPortal: React.FC = () => {
                     className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-indigo-500 bg-white"
                   >
                     <option value="standard">Standard (72h SLA)</option>
-                    <option value="high">High (48h SLA)</option>
+                    <option
+                      value="high"
+                      disabled={activeHighPriorityCount >= 2}
+                    >
+                      High (48h SLA)
+                      {activeHighPriorityCount >= 2 ? " - limit reached" : ""}
+                    </option>
                     <option value="urgent">Urgent / Safety (24h SLA)</option>
                   </select>
+                  <p className="mt-1 text-[10px] text-slate-500">
+                    Active high-priority complaints: {activeHighPriorityCount}/2
+                  </p>
                 </div>
               </div>
 

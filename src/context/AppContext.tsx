@@ -334,6 +334,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     isAnonymous: boolean;
     evidenceAttachmentName?: string;
   }) => {
+    const activeHighPriorityCount = complaints.filter(
+      (complaint) =>
+        complaint.priority === "high" &&
+        complaint.status !== "resolved" &&
+        complaint.status !== "closed" &&
+        (complaint.studentMatric === currentUser.identifier ||
+          (!complaint.isAnonymous &&
+            complaint.studentName === currentUser.name)),
+    ).length;
+
+    if (data.priority === "high" && activeHighPriorityCount >= 2) {
+      showNotification(
+        "High-priority limit reached. Resolve an active high-priority complaint before submitting another.",
+      );
+      return "";
+    }
+
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     const trackingCode = `SRV-2025-${randomNum}`;
 
