@@ -19,6 +19,9 @@ import {
   ChevronRight,
   ExternalLink,
   Compass,
+  AlertTriangle,
+  FileText,
+  Scale,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -121,8 +124,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: "evaluations",
-      label: "Course & Lecturer Evaluation",
-      icon: <BookOpen className="w-4 h-4 shrink-0" />,
+      label:
+        role === "student"
+          ? "Course & Lecturer Evaluation"
+          : role === "lecturer"
+            ? "Course Reviews"
+            : role === "qa_officer"
+              ? "Audit Checklist"
+              : role === "servicom_officer"
+                ? "Officer Actions"
+                : "Quality Overview",
+      icon:
+        role === "qa_officer" ? (
+          <ClipboardCheck className="w-4 h-4 shrink-0" />
+        ) : role === "servicom_officer" ? (
+          <LifeBuoy className="w-4 h-4 shrink-0" />
+        ) : role === "leadership" ? (
+          <Landmark className="w-4 h-4 shrink-0" />
+        ) : (
+          <BookOpen className="w-4 h-4 shrink-0" />
+        ),
       badge:
         role === "student" && pendingEvalsCount > 0
           ? `${pendingEvalsCount} pending`
@@ -131,8 +152,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: "lodge",
-      label: "Lodge SERVICOM Complaint",
-      icon: <ShieldAlert className="w-4 h-4 shrink-0" />,
+      label:
+        role === "student"
+          ? "Lodge SERVICOM Complaint"
+          : role === "lecturer"
+            ? "Action Plan"
+            : role === "qa_officer"
+              ? "New Audit"
+              : role === "servicom_officer"
+                ? "Complaint Dockets"
+                : "Priority Follow-ups",
+      icon:
+        role === "lecturer" ? (
+          <Sparkles className="w-4 h-4 shrink-0" />
+        ) : role === "qa_officer" ? (
+          <ClipboardCheck className="w-4 h-4 shrink-0" />
+        ) : role === "servicom_officer" ? (
+          <ShieldAlert className="w-4 h-4 shrink-0" />
+        ) : role === "leadership" ? (
+          <AlertTriangle className="w-4 h-4 shrink-0" />
+        ) : (
+          <ShieldAlert className="w-4 h-4 shrink-0" />
+        ),
     },
     {
       id: "directory",
@@ -141,8 +182,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: "track",
-      label: "Track My Complaints",
-      icon: <Clock className="w-4 h-4 shrink-0" />,
+      label:
+        role === "student"
+          ? "Track My Complaints"
+          : role === "lecturer"
+            ? "QA Audits"
+            : role === "qa_officer"
+              ? "Audit Registry"
+              : role === "servicom_officer"
+                ? "Service Charter"
+                : "Reports",
+      icon:
+        role === "qa_officer" ? (
+          <FileText className="w-4 h-4 shrink-0" />
+        ) : role === "servicom_officer" ? (
+          <Scale className="w-4 h-4 shrink-0" />
+        ) : role === "leadership" ? (
+          <FileText className="w-4 h-4 shrink-0" />
+        ) : (
+          <Clock className="w-4 h-4 shrink-0" />
+        ),
       badge: activeComplaintsCount > 0 ? `${activeComplaintsCount}` : undefined,
       badgeType: "teal",
     },

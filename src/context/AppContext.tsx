@@ -315,6 +315,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     setRoleState(newRole);
     setActiveNav("dashboard");
     setIsMobileDrawerOpen(false);
+    setIsNotificationsOpen(false);
+    setDirectoryPrefillCategory(null);
     showNotification(
       `Switched view to ${USER_PROFILES[newRole].name} (${USER_PROFILES[newRole].roleTitle})`,
     );
